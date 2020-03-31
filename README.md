@@ -22,5 +22,18 @@
 5. `git pull`
 6. `git push`
 
-## みんなの進捗
+### みんなの進捗
 ![progress](https://github.com/tmu-nlp/NLPtutorial2020/blob/master/progress.png)
+
+
+### Docker環境について
+興味がある人はDocker環境で作業してみてください。
+Makefileでコマンドを簡略化してあります。
+1. docker環境の構築
+`make docker-build`
+
+2.1. docker環境内でコードを実行
+`make docker-run FILE_NAME=./hirao/test.py`
+
+2.2. docker環境内でjupyterを起動(使いたい人はどうぞ)
+`make docker-run-jupyter PORT=12345`
