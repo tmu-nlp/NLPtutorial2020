@@ -13,10 +13,10 @@ RUN pip install -r /tmp/requirements.txt
 RUN rm -rf /tmp
 
 # Set User Name
-ARG UID
-ARG UNAME
-RUN useradd $UNAME -u $UID -m
-USER $UNAME
+# ARG UID
+# ARG UNAME
+# RUN useradd $UNAME -u $UID -m
+# USER $UNAME
 
 ## nltk package
 RUN python -m nltk.downloader punkt

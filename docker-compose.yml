@@ -1,0 +1,10 @@
+version: "3"
+services:
+  nlp_tutorial2020:
+    image: bluexleoxgreen/nlp_tutorial2020
+    tty: true
+    container_name: nlp_tutorial2020
+    volumes:
+      - ./:/work
+    working_dir: /work
+    command: bash
