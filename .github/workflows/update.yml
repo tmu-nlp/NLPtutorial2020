@@ -1,0 +1,10 @@
+name: Update Progressbar
+on: [push]
+  build:
+    runs-on: ubuntu-latest'
+    steps:
+    - uses: actions/checkout@v1
+    - name: test
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: ./update_progress.sh
