@@ -1,11 +1,11 @@
 name: Update Progressbar
 
-on: [push]
+on:
+  push:
+    branches: master
 
 jobs:
   update:
-    branches:
-      - master
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
