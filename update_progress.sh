@@ -2,7 +2,7 @@
 git config --global user.name "reo11"
 git config --global user.email "reohirao116@gmail.com"
 
-git remote set-url origin https://tmu-nlp:${GITHUB_TOKEN}@github.com:tmu-nlp/NLPtutorial2020.git
+git remote set-url origin https://reo11:${GITHUB_TOKEN}@github.com/tmu-nlp/NLPtutorial2020.git
 git checkout -b master
 
 git log -1
