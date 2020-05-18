@@ -1,5 +1,5 @@
 import sys
-dict = {}
+cnter = {}
 
 my_file = open(sys.argv[1])
 for line in my_file:
@@ -9,12 +9,12 @@ for line in my_file:
     words = line.split()
 
     for word in words:
-        if word in dict.keys():
-            dict[word] += 1
+        if word in cnter.keys():
+            cnter[word] += 1
         else:
-            dict[word] = 1
+            cnter[word] = 1
 
-for item in dict.items():
+for item in cnter.items():
     print(f"{item[0]}\t{item[1]}")
 
 my_file.close()
