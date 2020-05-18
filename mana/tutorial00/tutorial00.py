@@ -14,6 +14,7 @@ for line in testLines:
         else:
             counts[word] = 1
  
+print("the number of unique words in a given text is " + str(len(counts)))
+print("a list of words in a given text by frequency is")
 for key, value in sorted(counts.items()):
     print('%s --> %r' % (key, value))
-
