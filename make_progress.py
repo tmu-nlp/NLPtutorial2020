@@ -11,18 +11,16 @@ import datetime
 
 ignore = ['.sh', '.png', '.py', '.git', 'README', 'data', 'script', 'test', '.idea', '.github']
 maxcounts = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-SIZE = 13
+SIZE = 12
 
 user = list()
 user.append("")
 progress = list()
 progress.append(np.array([0] * SIZE, dtype=np.float32))
 for name in sorted([f for f in os.listdir() if os.path.isdir(f)]):
-#for name in [f for f in os.listdir() if os.path.isdir(f)]:
     if any(name in igword for igword in ignore):
         continue
     user.append(name)
-    print(name)
     score = list()
     for num, maxcount in zip(range(SIZE), maxcounts):
         count = 0
@@ -35,6 +33,7 @@ for name in sorted([f for f in os.listdir() if os.path.isdir(f)]):
 
     progress.append(np.array(score, dtype=np.float32))
 
+print(list(filter(lambda x: x, user)))
 user.append("")
 progress.append(np.array([0] * SIZE, dtype=np.float32))
 npscore = np.vstack(progress)
@@ -50,7 +49,6 @@ for i in range(npscore.shape[1]):
 today = datetime.date.today()
 #today = datetime.date(2017, 8, 2)
 date_list = list()
-date_list.append(datetime.date(2020, 5, 18))
 date_list.append(datetime.date(2020, 5, 25))
 date_list.append(datetime.date(2020, 6, 1))
 date_list.append(datetime.date(2020, 6, 8))
