@@ -17,10 +17,13 @@
 ### レポジトリのあげかた
 1. 各チュートリアル毎に、"tutorial##"（##はチュートリアルの番号を2桁で）フォルダを作成。
 2. 資料内もしくは勉強会内で指定した形式で課題を解く。
-3. `git add スクリプト名`（ワイルドカード*も使用可）
-4. `git commit -m 'コメント'`（コメントは自由に）
-5. `git pull`
-6. `git push`
+3. `git branch tutorial<nn>/<name>`でブランチを作る
+4. `git checkout tutorial<nn>/<name>`でブランチの中に移動する
+5. `git add スクリプト名`（ワイルドカード*も使用可）
+6. `git commit -m 'コメント'`（コメントは自由に）
+7. `git pull`
+8. `git push`
+9. Pull Requestsを作ってレビューしてもらう
 
 ### みんなの進捗
 ![progress](https://github.com/tmu-nlp/NLPtutorial2020/blob/master/progress.png)
