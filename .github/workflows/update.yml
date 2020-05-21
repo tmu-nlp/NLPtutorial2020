@@ -7,12 +7,11 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
+    container: bluexleoxgreen/make-progress:latest
     steps:
     - uses: actions/checkout@v1
     - name: update progress bar
-      uses: docker: bluexleoxgreen/make-progress
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        python3 -m pip install numpy matplotlib
         ./update_progress.sh
