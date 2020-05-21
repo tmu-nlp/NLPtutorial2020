@@ -6,6 +6,7 @@ on:
 
 jobs:
   update:
+    runs-on: ubuntu-latest
     docker:
       - image: bluexleoxgreen/make-progress
     steps:
