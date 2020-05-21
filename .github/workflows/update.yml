@@ -7,11 +7,10 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
-    docker:
-      - image: bluexleoxgreen/make-progress
     steps:
     - uses: actions/checkout@v1
     - name: update progress bar
+      uses: docker: bluexleoxgreen/make-progress
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
