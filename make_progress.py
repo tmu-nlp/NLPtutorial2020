@@ -9,7 +9,7 @@ import pylab as plt
 
 import datetime
 
-ignore = ['.sh', '.png', '.py', '.git', 'README', 'data', 'script', 'test', '.idea', '.github', 'hirao']
+ignore = ['.sh', '.png', '.py', '.git', 'README', 'data', 'script', 'test', '.idea', '.github', 'hirao', 'dockerfiles']
 maxcounts = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
 SIZE = 12
 
