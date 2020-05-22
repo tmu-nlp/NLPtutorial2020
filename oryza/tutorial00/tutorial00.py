@@ -1,5 +1,4 @@
 import sys
-from collections import defaultdict
 
 counts = {}
 my_file = open(sys.argv[1])
