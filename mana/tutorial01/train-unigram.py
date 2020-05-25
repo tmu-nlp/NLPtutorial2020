@@ -15,7 +15,7 @@ def train_unigram(file):
         counts(dict), word counts
         total_count(int), total word occurence in a given text
 
-    return:
+    output:
         textfile(word entry + its probability in a given text)
     """
 

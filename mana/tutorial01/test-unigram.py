@@ -20,7 +20,7 @@ def test_unigram(model_file, test_file):
         lambda_1, lambda_unk(float)
         V(int), total word entry including unknown words
 
-    return:
+    output:
         entropy(float)
         coverage(float)
 
