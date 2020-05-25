@@ -11,7 +11,6 @@ def test_unigram(model_file, test_file):
         test_file(file), a given text
 
     variables:
-        V(int), total word entry including unknown words
         W(int), total word count
         H(float), likelihood
         unk_words(int), total unkown word occurence
@@ -19,6 +18,7 @@ def test_unigram(model_file, test_file):
 
     params:
         lambda_1, lambda_unk(float)
+        V(int), total word entry including unknown words
 
     return:
         entropy(float)
