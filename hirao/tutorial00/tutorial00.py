@@ -10,6 +10,7 @@ stdinput command
 $ python tutorial00.py < ../../data/wiki-en-train.word
 """
 import sys
+from time import time
 from typing import List, Tuple
 from collections import defaultdict
 
@@ -28,7 +29,7 @@ def cnt_word_from_std_input() -> List[Tuple[int, int]]:
 def cnt_word_from_path(filepath: str) -> List[Tuple[int, int]]:
     cnt = defaultdict(lambda: 0)
 
-    with open(input_path) as f:
+    with open(filepath) as f:
         for line in f:
             for word in line.split():
                 cnt[word] += 1
@@ -37,11 +38,16 @@ def cnt_word_from_path(filepath: str) -> List[Tuple[int, int]]:
     return ret
 
 if __name__ == "__main__":
-    result = cnt_word_from_std_input()
-    # result = cnt_word_from_path("../../data/wiki-en-train.word")
-
-    for w, cnt in result:
-        print(w, cnt)
+    start = time()
+    # result = cnt_word_from_std_input()
+    result = cnt_word_from_path("../../data/wiki-en-train.word")
+    result = sorted(result)
+    # for w, cnt in result:
+    #     print(w, cnt)
 
     # ↑よりこっちの方が高速に動作する
-    # print("\n".join([f"{w} {cnt}" for w, cnt in result]))
+    print("\n".join([f"{w} {cnt}" for w, cnt in result]))
+
+    end = time() - start
+    print(f"Time: {end*1000:.1f}ms")
+
