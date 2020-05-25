@@ -6,6 +6,9 @@ r"""tutorial00.py
 >>> (lambda w: w.lower())("aBc")
 'abc'
 
+[NOTE]
+- ただし読み込ませるデータが多い時は逐次読み込ませる（OOM）
+
 [Small]
 INPUT_PATH=./test/00-input.txt
 ANSWER_PATH=./test/00-answer.txt
@@ -30,11 +33,11 @@ import doctest
 import os
 import sys
 import typing
-from typing import Any, Callable, Counter, List, Set, Tuple, TypeVar
+from typing import Callable, Counter, List, Set, Tuple, TypeVar
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../"))
-from kiyuna.utils.message import Renderer, message  # isort:skip
-from kiyuna.utils.pickle import dump, load  # isort:skip
+from kiyuna.utils.message import Renderer, message  # noqa: E402 isort:skip
+from kiyuna.utils.pickle import dump, load  # noqa: E402 isort:skip
 
 T = TypeVar("T")
 F = Callable[[str], T]
@@ -91,7 +94,7 @@ if __name__ == "__main__":
             "大文字と小文字の区別をする",
             build_word_frequency_cnter(path, str).most_common(num),
         )
-        trans = lambda w: w.lower()
+        trans = lambda w: w.lower()  # noqa: E731
         out.result(
             "大文字と小文字の区別をしない",
             build_word_frequency_cnter(path, trans).most_common(num),

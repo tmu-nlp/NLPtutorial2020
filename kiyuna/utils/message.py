@@ -1,6 +1,5 @@
-import os
 import sys
-from typing import IO, Any, Callable, Optional, Tuple, Type, TypeVar, Union
+from typing import IO, Callable, Optional, Tuple, Type, TypeVar, Union
 
 import colorama
 from colorama import Back, Fore, Style
@@ -47,7 +46,7 @@ def trunc(msg: str) -> str:
 
 
 def message(
-    *text: Optional[Tuple[Stringifiable]],
+    *text: Optional[Stringifiable],
     CR: bool = False,
     type: str = "emit",
     file: IO[str] = sys.stderr,
