@@ -7,16 +7,18 @@ def test_unigram(model_file, test_file):
         model validation with a given text
 
     args:
-        model_file(file), (word entry + its probability, sep = " ")
-        test_file(file),
+        model_file(file), word entry + its probability
+        test_file(file), a given text
 
     variables:
-        lambda_1, lambda_unk(float), parameter
         V(int), total word entry including unknown words
-        W(int), total word occurence
+        W(int), total word count
         H(float), likelihood
         unk_words(int), total unkown word occurence
-        probabilities(dict), dict from a given text
+        probabilities(dict), dict from a model
+
+    params:
+        lambda_1, lambda_unk(float)
 
     return:
         entropy(float)

@@ -1,15 +1,12 @@
 import sys
 from collections import defaultdict
 
-"""
-Uni-Gram model
-"""
 
 def train_unigram(file):
 
     """
     what this function does:
-        create Uni-Gram language model from a given text
+        create a Uni-Gram language model from a given text
 
     arg:
         file(file), a given text
@@ -29,7 +26,7 @@ def train_unigram(file):
         words = line.split()
         words.append("</s>")
         for word in words:
-            counts[word.lower()] += 1   #lower() --> +0.05 (coverage)
+            counts[word.lower()] += 1   #using .lower() --> +0.05 (coverage)
             total_count += 1
 
     modelFile = open("model_file.txt", "w")
