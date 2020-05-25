@@ -14,7 +14,7 @@ def test_unigram(model_file, test_file):
         lambda_1, lambda_unk(float), parameter
         V(int), total word entry including unknown words
         W(int), total word occurence
-        H (float), likelihood
+        H(float), likelihood
         unk_words(int), total unkown word occurence
         probabilities(dict), dict from a given text
 
