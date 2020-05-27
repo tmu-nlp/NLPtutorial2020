@@ -4,7 +4,7 @@ import pickle
 import numpy as np
 if not os.path.exists("./model"): os.mkdir("./model")
 
-from unigram import *
+from unigram import UnigramModel
 
 
 if __name__ == "__main__":
