@@ -31,7 +31,7 @@ import collections
 import math
 import os
 import sys
-from typing import Callable, Dict, List, Optional, Type, TypeVar
+from typing import Callable, Dict, List, Type, TypeVar
 
 import numpy as np
 
@@ -48,16 +48,13 @@ Model = Dict[T, Prob]
 
 class UnigramLM:
     model: Model
+    n: int = 1
     trans: F
-    BOS: Optional[str]
-    EOS: Optional[str]
+    BOS: str
+    EOS: str
 
     def __init__(
-        self,
-        *,
-        trans: F = str,
-        BOS: Optional[str] = "<s>",
-        EOS: Optional[str] = "</s>",
+        self, *, trans: F = str, BOS: str = "<s>", EOS: str = "</s>",
     ) -> None:
         self.trans = trans
         self.BOS = BOS
@@ -67,10 +64,8 @@ class UnigramLM:
         """append BOS and EOS
         """
         words = line.strip().split()
-        if self.BOS:
-            words = [self.BOS] + words
-        if self.EOS:
-            words = words + [self.EOS]
+        words = [self.BOS] * (self.n - 1) + words
+        words = words + [self.EOS]
         return words
 
     def train(self, path_corpus: str) -> Type["Unigram"]:
@@ -148,11 +143,11 @@ class UnigramLM:
 
 def train(args: argparse.Namespace) -> None:
     with Timer():
-        UnigramLM(BOS=None).train(args.corpus).dump(args.model)
+        UnigramLM().train(args.corpus).dump(args.model)
 
 
 def test(args: argparse.Namespace) -> None:
-    model = UnigramLM(BOS=None).load(args.model)
+    model = UnigramLM().load(args.model)
 
     res = model.test(args.test)
     if args.name:

@@ -48,9 +48,10 @@ Model = DefaultDict[T, Prob]
 
 class BigramLM(UnigramLM):
     model: Model
+    n: int = 2
     trans: F
-    BOS: Optional[str]
-    EOS: Optional[str]
+    BOS: str
+    EOS: str
     WittenBell: bool
     updated_for_WB: bool
 
@@ -58,8 +59,8 @@ class BigramLM(UnigramLM):
         self,
         *,
         trans: F = str,
-        BOS: Optional[str] = "<s>",
-        EOS: Optional[str] = "</s>",
+        BOS: str = "<s>",
+        EOS: str = "</s>",
         WittenBell: bool = False,
     ) -> None:
         super().__init__()
@@ -105,7 +106,7 @@ class BigramLM(UnigramLM):
                 model[ngram] = float(prob)
         return model
 
-    def check_update(self):
+    def _check_update(self):
         if not self.WittenBell:
             return
         if self.updated_for_WB:
@@ -146,7 +147,7 @@ class BigramLM(UnigramLM):
                 return λ_2
             return c / (u + c)
 
-        self.check_update()
+        self._check_update()
         with open(path_test) as f:
             for line in f:
                 words = self._get_words(line)
