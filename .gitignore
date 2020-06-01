@@ -134,3 +134,7 @@ dmypy.json
 
 # nohup
 nohup.out
+.joblib
+.jb
+.pickle
+.pkl
