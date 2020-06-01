@@ -15,7 +15,7 @@ TEST_PATH=./test/01-test-input.txt
 TEST_ANSWER_PATH=./test/01-test-answer.txt
 
 [Large]
-NAME=wiki
+NAME="wiki - unigram"
 CORPUS_PATH=./data/wiki-en-train.word
 MODEL_PATH=./model_wiki.txt
 TEST_PATH=./data/wiki-en-test.word
@@ -32,6 +32,8 @@ import math
 import os
 import sys
 from typing import Callable, Dict, List, Optional, Type, TypeVar
+
+import numpy as np
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../"))
 import kiyuna.utils.pickle as pickle  # noqa: E402 isort:skip
@@ -110,7 +112,11 @@ class UnigramLM:
                 f.write(f"{token}\t{prob:f}\n")
 
     def test(
-        self, path_test: str, vocab_size: int = 1_000_000, λ_unk: float = 0.05
+        self,
+        path_test: str,
+        *,
+        vocab_size: int = 1_000_000,
+        λ_unk: float = 0.05,
     ) -> Dict[str, float]:
         r"""calculate entropy, perplexity and coverage
         :math:`P(w_i) = λ_1 * P_ML(w_i) + (1 − λ_1) / V`
@@ -140,19 +146,32 @@ class UnigramLM:
         return ret
 
 
-def train(args):
+def train(args: argparse.Namespace) -> None:
     with Timer():
         UnigramLM(BOS=None).train(args.corpus).dump(args.model)
 
 
-def test(args):
-    with Timer():
-        res = UnigramLM(BOS=None).load(args.model).test(args.test)
+def test(args: argparse.Namespace) -> None:
+    model = UnigramLM(BOS=None).load(args.model)
 
+    res = model.test(args.test)
     if args.name:
-        print(f"[{args.name}]")
+        message(f"[{args.name} | default(λ_1={0.95:.2f})]", file=sys.stdout)
     for k, v in res.items():
-        print(f"{k:15s} = {v:f}")
+        message(f"{k:15s} = {v:f}", file=sys.stdout)
+
+    entropy, λ_1 = min(
+        (model.test(args.test, λ_unk=1 - λ_1)["entropy_H"], λ_1)
+        for λ_1 in np.arange(0, 1, 0.01)
+    )
+
+    res = model.test(args.test, λ_unk=1 - λ_1)
+    if args.name:
+        message(
+            f"[{args.name} | optimized(λ_1={λ_1:.2f})]", file=sys.stdout,
+        )
+    for k, v in res.items():
+        message(f"{k:15s} = {v:f}", file=sys.stdout)
 
     """result
     [test]
@@ -160,9 +179,13 @@ def test(args):
     perplexity_PPL  = 104.684170
     coverage        = 0.800000
 
-    [wiki]
+    [wiki - unigram | default(λ_1=0.95)]
     entropy_H       = 10.526656
     perplexity_PPL  = 1475.160635
+    coverage        = 0.895226
+    [wiki - unigram | optimized(λ_1=0.89)]
+    entropy_H       = 10.491366
+    perplexity_PPL  = 1439.514219
     coverage        = 0.895226
     """
 
