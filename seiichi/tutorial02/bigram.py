@@ -42,7 +42,7 @@ class BigramModel(object):
         return self
 
     def calc_bigram_word_prob(self, context: str, word: str, smoothing=True):
-        prob1 = self.lambda_1 * self.calc_unigram_word_prob(word)
+        prob1 = self.calc_unigram_word_prob(word)
         if context not in self.context_cnt.keys():
             prob2 = 0
         else:
