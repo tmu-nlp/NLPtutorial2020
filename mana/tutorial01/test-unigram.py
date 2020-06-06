@@ -56,4 +56,4 @@ def test_unigram(model_file, test_file):
             + "coverage = " + str((W-unk_words)/W)
 
 if __name__ == "__main__":
-    test_unigram(sys.argv[1], sys.argv[2])
+    print(test_unigram("model_file.txt", "wiki-en-test.word"))

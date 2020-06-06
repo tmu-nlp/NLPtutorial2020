@@ -35,4 +35,4 @@ def train_unigram(file):
         modelFile.write(word+" "+str(probability)+"\n")
 
 if __name__ == "__main__":
-    train_unigram(sys.argv[1])
+    train_unigram("wiki-en-train.word")
