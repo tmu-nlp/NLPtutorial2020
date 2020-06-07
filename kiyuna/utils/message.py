@@ -1,5 +1,5 @@
 import sys
-from typing import IO, Callable, Optional, Tuple, Type, TypeVar, Union
+from typing import IO, Callable, Tuple, Type, TypeVar, Union
 
 import colorama
 from colorama import Back, Fore, Style
@@ -46,7 +46,7 @@ def trunc(msg: str) -> str:
 
 
 def message(
-    *text: Optional[Stringifiable],
+    *text: Stringifiable,
     CR: bool = False,
     type: str = "emit",
     file: IO[str] = sys.stderr,
@@ -61,11 +61,15 @@ def message(
 
 
 class Renderer(object):
+    title: str
+    cnt: int
+
     def __init__(self, title: str) -> None:
-        self.title: str = title
+        self.title = title
         self.cnt = 1
 
     def __enter__(self) -> Type["Renderer"]:
+        message()
         message(underlined(self.title), type="success")
         return self
 

@@ -2,8 +2,10 @@ r"""tutorial02.py
 train-bigram: 2-gram モデルを学習
 test-bigram: 2-gram モデルに基づいて評価データのエントロピーを計算
 
-[TODO]
-- 任意な文脈長が利用可能なプログラム
+[Ref]
+- Witten-Bell smoothing
+    - https://nlp.stanford.edu/~wcmac/papers/20050421-smoothing-tutorial.pdf
+        - p.p. 23-24
 
 [Small]
 NAME=test
@@ -96,6 +98,10 @@ class BigramLM(UnigramLM):
             prob = cnter[ngram] / cnter_context[context]
             model[ngram] = prob
             model["cnt::" + ngram] = cnter[ngram]
+        from pprint import pprint
+
+        pprint(cnter)
+        pprint(cnter_context)
         return model
 
     def __load_model(self, path_model: str) -> Model:
@@ -137,7 +143,7 @@ class BigramLM(UnigramLM):
 
         def get_λ_2(context: str) -> float:
             r"""
-            :math:`λ_{w_{i-1}} = \frac{c(w_{i-1})}{u(w_{i-1}) + c(w_{i-1})}`
+            :math:`λ_{w_{i-1}} = 1 - \frac{u(w_{i-1})}{u(w_{i-1}) + c(w_{i-1})}`
             """
             if not self.WittenBell:
                 return λ_2
@@ -145,7 +151,7 @@ class BigramLM(UnigramLM):
             u = self.model["cnt::" + context + " *"]
             if c == 0:
                 return λ_2
-            return c / (u + c)
+            return 1 - u / (u + c)
 
         self._check_update()
         with open(path_test) as f:
@@ -261,16 +267,16 @@ def test(args: argparse.Namespace) -> None:
     λ_1, λ_2 = grid_search(
         model,
         args.test,
-        rng=(0.1, 1, 0.1),
+        rng=(0.05, 1, 0.05),
         save=f"fig1_{get_ext(args.WittenBell)}.png",
     )
-    λ_1, λ_2 = grid_search(
-        model,
-        args.test,
-        rng1=(λ_1 - 0.1, λ_1 + 0.1, 0.01),
-        rng2=(λ_2 - 0.1, λ_2 + 0.1, 0.01),
-        save=f"fig2_{get_ext(args.WittenBell)}.png",
-    )
+    # λ_1, λ_2 = grid_search(
+    #     model,
+    #     args.test,
+    #     rng1=(λ_1 - 0.1, λ_1 + 0.1, 0.01),
+    #     rng2=(λ_2 - 0.1, λ_2 + 0.1, 0.01),
+    #     save=f"fig2_{get_ext(args.WittenBell)}.png",
+    # )
 
     res = model.test(args.test, λ_1=λ_1, λ_2=λ_2)
     if args.name:
