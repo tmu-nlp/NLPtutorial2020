@@ -7,6 +7,7 @@ from pprint import pprint
 class bigramLM():
     def __init__(self):
         self.freqs = defaultdict(lambda: 0)
+        self.context_freqs = defaultdict(lambda: 0)
         self.probs = defaultdict(lambda: 0)
         self.total_freqs = 0
 
@@ -27,11 +28,13 @@ class bigramLM():
                 words.append('</s>')
                 #print(words)
                 for i in range(1, len(words)):
-                    word = words[i-1]
+                    word = words[i]
+                    context_word = words[i-1]
                     bigram = f'{words[i-1]} {words[i]}'
                     #print(bigram)
                     self.freqs[word] += 1
                     self.freqs[bigram] += 1
+                    self.context_freqs[context_word] += 1
                     self.total_freqs += 1
 
         for ngram, freq in self.freqs.items():
@@ -42,7 +45,7 @@ class bigramLM():
             elif len(words) == 2:
                 # bigram
                 context_word = words[0]
-                context_freq = self.freqs[context_word]
+                context_freq = self.context_freqs[context_word]
                 self.probs[ngram] = freq / context_freq
             else:
                 print('error')
@@ -118,11 +121,11 @@ class bigramLM():
 
 
 if __name__ == '__main__':
+    #train_file_path = './test/02-train-input.txt'
     train_file_path = './data/wiki-en-train.word'
     test_file_path = './data/wiki-en-test.word'
     biLM = bigramLM()
     biLM.train(train_file_path)
-    #pprint(biLM.freqs)
     #pprint(biLM.probs)
     lambda_1_best, lambda_2_best, entropy_best = biLM.grid_search(test_file_path)
     print('lambda_1: {}\n lambda_2: {}\n entropy: {:.2f}'.format(lambda_1_best, lambda_2_best, entropy_best))
