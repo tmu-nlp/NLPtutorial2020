@@ -12,13 +12,22 @@ OUTPUT_PATH=./my_answer.word
 python tutorial03.py train ../../data/wiki-ja-train.word ./$MODEL_PATH
 python tutorial03.py test ./$MODEL_PATH ../../data/wiki-ja-test.txt $OUTPUT_PATH
 perl ../../script/gradews.pl ../../data/wiki-ja-test.word $OUTPUT_PATH | pbcopy
+# Sent Accuracy: 23.81% (20/84)
+# Word Prec: 68.93% (1861/2700)
+# Word Rec: 80.77% (1861/2304)
+# F-meas: 74.38%
+# Bound Accuracy: 83.25% (2683/3223)
 
-[Result]
-Sent Accuracy: 23.81% (20/84)
-Word Prec: 68.93% (1861/2700)
-Word Rec: 80.77% (1861/2304)
-F-meas: 74.38%
-Bound Accuracy: 83.25% (2683/3223)
+[Challenge]
+MODEL_PATH=./data/big-ws-model.txt
+OUTPUT_PATH=./my_answer_big.word
+python tutorial03.py test ../../$MODEL_PATH ../../data/wiki-ja-test.txt $OUTPUT_PATH
+perl ../../script/gradews.pl ../../data/wiki-ja-test.word $OUTPUT_PATH | pbcopy
+# Sent Accuracy: 17.86% (15/84)
+# Word Prec: 85.66% (1972/2302)
+# Word Rec: 85.59% (1972/2304)
+# F-meas: 85.63%
+# Bound Accuracy: 91.13% (2937/3223)
 """
 import argparse
 import math
