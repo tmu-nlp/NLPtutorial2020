@@ -10,12 +10,13 @@ TEST_FILENAME = '02-train-input.txt'
 TRAIN_ANSWER_FILENAME = '02-train-answer.txt'
 MODEL_FILENAME = 'tutorial02.model'
 V = 1000000
+N = 2
 
 
-class ngram:
+class Ngram:
     def __init__(self, n=2):
         self.n = n
-        self.gram_counter = Counter()
+        self.gram_counter = Counter()                                                       #(w_i|w_(i-1), w(i-2)) -> str: 'w_i w_(i-1) w_(i-2)'
         self.context_counter = Counter()
         self.prob = defaultdict(lambda :0)
 
@@ -24,8 +25,8 @@ class ngram:
             words = ['<s>'] + line.replace('\n', '').split(' ') + ['<\\s>']
             for n in range(self.n, 0, -1):
                 for index in range(max(1, n - 1), len(words)):
-                    self.gram_counter[' '.join(words[index - n + 1: index + 1])] += 1
-                    self.context_counter[' '.join(words[index - n + 1: index])] += 1
+                    self.gram_counter[' '.join(words[index - n + 1: index + 1])] += 1       # (i-n+1) ~ i
+                    self.context_counter[' '.join(words[index - n + 1: index])] += 1        # (i-n+1) ~ (i-1)
 
         for (gram, num) in self.gram_counter.items():
             self.prob[gram] = float(num) / self.context_counter[' '.join(gram.split(' ')[:-1])]
@@ -62,8 +63,6 @@ class ngram:
 
     def linear_smoothing(self, text: str, linear_lambda: list = []):
         '''
-        Calculate entropy using linear smoothing, follow the equation:
-        TBW
         :param text: input text
         :param linear_lambda: [l1, l2, ..., ln] where sum(linear_lambda) == 1
         :return: entropy
@@ -77,7 +76,7 @@ class ngram:
 
         lamb = linear_lambda
         for line in text.split('\n'):
-            words = ['<s>'] + line.split(' ') + ['<\\s>']
+            words = ['<s>'] * (self.n - 1) + line.split(' ') + ['<\\s>']
             for index in range(max(1, self.n - 1), len(words)):
                 word = words[index]
                 p = lamb[1] * self.prob[word] + lamb[0] / V
@@ -89,14 +88,17 @@ class ngram:
         return entropy / total_length
 
     def witten_bell_smoothing(self, text: str, lamb_uni: float=0.95):
+        '''
+        :param text: input_text
+        :param lamb_uni: lambda for P_ML(w_i)
+        :return: entropy
+        '''
         lamb = {}
         entropy = 0.0
         total_length = 0.0
-        # p = [0.0 for _ in range(0, self.n + 1)]
         text_stoken = ''                                    # text with token '<s>' and '<\s>'
         for line in text.split('\n'):
             text_stoken = text_stoken + '<s> ' + line + ' <\\s> '
-            # words = ['<s>'] + line.split(' ') + ['<\\s>']
 
         # calculate lambda[w]
         for word in text_stoken.split(' '):
@@ -111,25 +113,21 @@ class ngram:
 
         # calculate entropy
         for line in text.split('\n'):
-            words = ['<s>'] + line.split(' ') + ['<\\s>']
+            words = ['<s>'] * (self.n - 1) + line.split(' ') + ['<\\s>']
             for index in range(max(1, self.n - 1), len(words)):
                 word = words[index]
                 p = lamb_uni * self.prob[word] + (1 - lamb_uni) / V
                 for n in range(2, self.n + 1):
                     gram = ' '.join(words[index - n + 1: index + 1])
-                    p += lamb[(word, n - 1)] * self.prob[gram]
+                    p = lamb[(word, n - 1)] * self.prob[gram] + (1 - lamb[(word, n - 1)]) * p
                 entropy -= math.log(p, 2)
             total_length += len(words) - 1
 
         return entropy / total_length
 
 
-
-
-
 if __name__ == '__main__':
-
-    bigram = ngram(2)
+    bigram = Ngram(N)
     # Train
     with open(PATH + TRAIN_FILENAME) as file:
         text = ''.join([line for line in file])
@@ -162,7 +160,7 @@ if __name__ == '__main__':
                 else:
                     continue
 
-        lambda_generator([], 3, 1.0, 20)
+        lambda_generator([], N + 1, 1.0, 20)
 
         for lamb in lambdas:
             entropy = bigram.test(text, 'linear', lamb)
