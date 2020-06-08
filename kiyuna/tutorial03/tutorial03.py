@@ -8,26 +8,18 @@ diff -s $OUTPUT_PATH ../../test/04-answer.txt
 
 [Large]
 MODEL_PATH=./model_wiki.txt
-OUTPUT_PATH=./my_answer.word
 python tutorial03.py train ../../data/wiki-ja-train.word ./$MODEL_PATH
-python tutorial03.py test ./$MODEL_PATH ../../data/wiki-ja-test.txt $OUTPUT_PATH
+L1=95  # PPL が小さい L1=89 にしても変化なし
+OUTPUT_PATH=./my_answer_${L1}.word
+python tutorial03.py test ./$MODEL_PATH ../../data/wiki-ja-test.txt $OUTPUT_PATH --lambda_1 0.$L1
 perl ../../script/gradews.pl ../../data/wiki-ja-test.word $OUTPUT_PATH | pbcopy
-# Sent Accuracy: 23.81% (20/84)
-# Word Prec: 68.93% (1861/2700)
-# Word Rec: 80.77% (1861/2304)
-# F-meas: 74.38%
-# Bound Accuracy: 83.25% (2683/3223)
 
 [Challenge]
 MODEL_PATH=./data/big-ws-model.txt
-OUTPUT_PATH=./my_answer_big.word
-python tutorial03.py test ../../$MODEL_PATH ../../data/wiki-ja-test.txt $OUTPUT_PATH
+L1=95  # PPL が小さい L1=89 にすると 57 行目が悪化
+OUTPUT_PATH=./my_answer_${L1}_big.word
+python tutorial03.py test ../../$MODEL_PATH ../../data/wiki-ja-test.txt $OUTPUT_PATH --lambda_1 0.$L1
 perl ../../script/gradews.pl ../../data/wiki-ja-test.word $OUTPUT_PATH | pbcopy
-# Sent Accuracy: 17.86% (15/84)
-# Word Prec: 85.66% (1972/2302)
-# Word Rec: 85.59% (1972/2304)
-# F-meas: 85.63%
-# Bound Accuracy: 91.13% (2937/3223)
 """
 import argparse
 import math
@@ -87,11 +79,13 @@ class Viterbi(UnigramLM):
                 res.append(" ".join(words) + "\n")
         with open(path_output, "w") as f_out:
             f_out.writelines(res)
-        message("done viterbi", type="success")
+        message(f"saved {path_output}", type="success")
 
 
 def main(args: argparse.Namespace) -> None:
-    Viterbi().load(args.model).solve(args.input, args.output)
+    Viterbi().load(args.model).solve(
+        args.input, args.output, λ_1=args.lambda_1
+    )
 
 
 if __name__ == "__main__":
@@ -109,6 +103,9 @@ if __name__ == "__main__":
     parser_test.add_argument("model", help="the location of a model file")
     parser_test.add_argument("input", help="分割したいファイルのパス")
     parser_test.add_argument("output", help="分割結果の保存先")
+    parser_test.add_argument(
+        "--lambda_1", type=float, default=0.95, help="λ_1"
+    )
     parser_test.set_defaults(handler=main)
 
     args = parser.parse_args()
@@ -116,3 +113,33 @@ if __name__ == "__main__":
         args.handler(args)
     else:
         parser.print_help()
+
+"""result
+# λ_1 = 0.95
+Sent Accuracy: 23.81% (20/84)
+Word Prec: 68.93% (1861/2700)
+Word Rec: 80.77% (1861/2304)
+F-meas: 74.38%
+Bound Accuracy: 83.25% (2683/3223)
+
+# λ_1 = 0.89
+Sent Accuracy: 23.81% (20/84)
+Word Prec: 68.93% (1861/2700)
+Word Rec: 80.77% (1861/2304)
+F-meas: 74.38%
+Bound Accuracy: 83.25% (2683/3223)
+
+# λ_1 = 0.95, big
+Sent Accuracy: 17.86% (15/84)
+Word Prec: 85.66% (1972/2302)
+Word Rec: 85.59% (1972/2304)
+F-meas: 85.63%
+Bound Accuracy: 91.13% (2937/3223)
+
+# λ_1 = 0.89, big
+Sent Accuracy: 17.86% (15/84)
+Word Prec: 85.61% (1970/2301)
+Word Rec: 85.50% (1970/2304)
+F-meas: 85.56%
+Bound Accuracy: 91.10% (2936/3223)
+"""
