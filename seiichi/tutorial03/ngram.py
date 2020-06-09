@@ -7,15 +7,15 @@ import numpy as np
 from collections import defaultdict
 
 class NgramModel(object):
-    def __init__(self, n=2, BOS="<s>", EOS="</s>", EMP="<none>", SEP=" "):
+    def __init__(self, n=2, lambda_1=0.95, lambda_2=0.05 ,V=1e6, BOS="<s>", EOS="</s>", EMP="<none>", SEP=" "):
         self.n = n
         # self.context_cnt = defaultdict(int)
         self.ngram_context_cnt = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
         self.BOS = BOS
         self.EOS = EOS
-        self.lambda_1 = 0.95
-        self.lambda_2 = 0.05
-        self.V = 1e6
+        self.lambda_1 = lambda_1
+        self.lambda_2 = lambda_2
+        self.V = V
         self.EMP = EMP
         self.SEP = SEP
         return

@@ -7,10 +7,7 @@ from ngram import NgramModel
 
 class Tokenizer(NgramModel):
     def __init__(self, n=1, V=1e6, lambda_1=0.95):
-        self.n = n
-        self.V = V
-        self.lambda_1 = lambda_1
-        super().__init__(n=self.n)
+        super().__init__(n=n, V=V, lambda_1=lambda_1)
 
     def forward(self, line):
         best_edge, best_score = [None] * (len(line)+1), [float("inf")] * (len(line)+1)
