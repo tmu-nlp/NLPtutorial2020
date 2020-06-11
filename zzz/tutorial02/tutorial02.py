@@ -18,15 +18,17 @@ class Ngram:
         self.n = n
         self.gram_counter = Counter()                                                       #(w_i|w_(i-1), w(i-2)) -> str: 'w_i w_(i-1) w_(i-2)'
         self.context_counter = Counter()
-        self.prob = defaultdict(lambda :0)
+        self.prob = defaultdict(lambda: 0)
+        self.p = defaultdict(lambda: 0)
 
     def fit(self, text: str):
         for line in text.split('\n'):
-            words = ['<s>'] + line.replace('\n', '').split(' ') + ['<\\s>']
-            for n in range(self.n, 0, -1):
-                for index in range(max(1, n - 1), len(words)):
-                    self.gram_counter[' '.join(words[index - n + 1: index + 1])] += 1       # (i-n+1) ~ i
-                    self.context_counter[' '.join(words[index - n + 1: index])] += 1        # (i-n+1) ~ (i-1)
+            if len(line) > 0:
+                words = ['<s>'] + line.replace('\n', '').split(' ') + ['<\\s>']
+                for n in range(self.n, 0, -1):
+                    for index in range(max(1, n - 1), len(words)):
+                        self.gram_counter[' '.join(words[index - n + 1: index + 1])] += 1       # (i-n+1) ~ i
+                        self.context_counter[' '.join(words[index - n + 1: index])] += 1        # (i-n+1) ~ (i-1)
 
         for (gram, num) in self.gram_counter.items():
             self.prob[gram] = float(num) / self.context_counter[' '.join(gram.split(' ')[:-1])]
@@ -52,6 +54,7 @@ class Ngram:
                     self.prob[temp[0]] = float(temp[-1])
 
     def test(self, text: str, smoothing='linear', linear_lambda: list = []):
+        self.p = defaultdict(lambda: linear_lambda[0] / V)
         if smoothing == 'linear':
             entropy = self.linear_smoothing(text, linear_lambda)
 
@@ -76,15 +79,16 @@ class Ngram:
 
         lamb = linear_lambda
         for line in text.split('\n'):
-            words = ['<s>'] * (self.n - 1) + line.split(' ') + ['<\\s>']
-            for index in range(max(1, self.n - 1), len(words)):
-                word = words[index]
-                p = lamb[1] * self.prob[word] + lamb[0] / V
-                for n in range(2, self.n + 1):
-                    gram = ' '.join(words[index - n + 1: index + 1])
-                    p += lamb[n] * self.prob[gram]
-                entropy -= math.log(p, 2)
-            total_length += len(words) - 1
+            if len(line) > 0:
+                words = ['<s>'] * (self.n - 1) + line.split(' ') + ['<\\s>']
+                for index in range(self.n - 1, len(words)):
+                    word = words[index]
+                    self.p[word] = lamb[1] * self.prob[word] + lamb[0] / V
+                    for n in range(2, self.n + 1):
+                        gram = ' '.join(words[index - n + 1: index + 1])
+                        self.p[gram] = lamb[n] * self.prob[gram] + self.p[' '.join(gram.split(' ')[1:])]
+                    entropy -= math.log(self.p[word], 2)
+                total_length += len(words)
         return entropy / total_length
 
     def witten_bell_smoothing(self, text: str, lamb_uni: float=0.95):
@@ -116,11 +120,11 @@ class Ngram:
             words = ['<s>'] * (self.n - 1) + line.split(' ') + ['<\\s>']
             for index in range(max(1, self.n - 1), len(words)):
                 word = words[index]
-                p = lamb_uni * self.prob[word] + (1 - lamb_uni) / V
+                self.p[word] = lamb_uni * self.prob[word] + (1 - lamb_uni) / V
                 for n in range(2, self.n + 1):
                     gram = ' '.join(words[index - n + 1: index + 1])
-                    p = lamb[(word, n - 1)] * self.prob[gram] + (1 - lamb[(word, n - 1)]) * p
-                entropy -= math.log(p, 2)
+                    self.p[gram] = lamb[(word, n - 1)] * self.prob[gram] + (1 - lamb[(word, n - 1)]) * self.p[' '.join(gram.split(' ')[1:])]
+                entropy -= math.log(self.p[word], 2)
             total_length += len(words) - 1
 
         return entropy / total_length
