@@ -50,7 +50,7 @@ class NgramModel(object):
 
     def calc_ngram_word_prob(self, ngram: list):
         prob = 1 / self.V
-        word, context = "".join(ngram[-1:]), tuple(ngram[:-1])
+        # word, context = "".join(ngram[-1:]), tuple(ngram[:-1])
         for i in range(1, self.n+1):
             subst = ngram[-i:]
             subst_word = "".join(subst[-1:])
