@@ -16,7 +16,7 @@ def train_bigram(file):
             words = line.split()
             words.append("</s>")
             words.insert(0, "<s>")
-            for i in range(len(words) - 2):
+            for i in range(len(words) - 1):
                 counts[words[i]+" "+words[i+1]] += 1
                 context_counts[words[i]] += 1
                 counts[words[i+1]] += 1
