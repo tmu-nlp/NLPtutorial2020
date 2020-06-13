@@ -27,7 +27,7 @@ with open(test, encoding="utf-8") as test_file:
         line = test_file.readline()
         words.append("</s>")
         words.insert(0, "<s>")
-        for i in range(len(words) - 2):
+        for i in range(len(words) - 1):
             P1 = lambda1*probs[words[i+1]] + (1-lambda1)/V
             P2 = lambda2*probs[words[i] + " " + words[i+1]] + (1-lambda2)*P1
             H += -math.log(P2, 2)
