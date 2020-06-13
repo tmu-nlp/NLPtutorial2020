@@ -3,8 +3,8 @@ from collections import defaultdict
 counts = defaultdict(int)
 context_counts = defaultdict(int)
 
-train = "../../test/02-train-input.txt"
-#train = "../../data/wiki-en-train.word"
+#train = "../../test/02-train-input.txt"
+train = "../../data/wiki-en-train.word"
 
 model = "./model_file.txt"
 
