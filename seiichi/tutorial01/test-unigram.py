@@ -14,6 +14,6 @@ if __name__ == "__main__":
     # train_path = "../../data/wiki-en-train.word"
     test_path = "../../data/wiki-en-test.word"
     model = UnigramModel()
-    model.load("./model/wikien.model")
+    model.load_model("./model/wikien.model")
     entropy, cov = model.report(test_path)
     print("entropy={}\ncoverage={}".format(entropy, cov))

@@ -15,5 +15,5 @@ if __name__ == "__main__":
     train_path = "../../data/wiki-en-train.word"
     model = UnigramModel()
     model.train(train_path)
-    model.save("./model/wikien.model")
+    model.save_model("./model/wikien.model")
     # model.word_probabilities()
