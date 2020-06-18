@@ -33,8 +33,8 @@ from kiyuna.tutorial01.tutorial01 import UnigramLM  # noqa: E402 isort:skip
 from kiyuna.tutorial01.tutorial01 import train  # noqa: E402 isort:skip
 
 
-class Viterbi(UnigramLM):
-    def solve(
+class Tokenizer(UnigramLM):
+    def tokenize(
         self,
         path_input: str,
         path_output: str,
@@ -42,9 +42,7 @@ class Viterbi(UnigramLM):
         λ_1: float = 0.95,
         vocab_size: int = 1_000_000,
     ) -> None:
-        def forward_step(
-            line: str, V: int = vocab_size
-        ) -> List[Tuple[int, int]]:
+        def forward(line: str, V: int = vocab_size) -> List[Tuple[int, int]]:
             size = len(line)
             best_edge = [None] * (size + 1)
             best_score = [float("inf")] * (size + 1)
@@ -60,9 +58,7 @@ class Viterbi(UnigramLM):
                             best_edge[word_end] = (word_begin, word_end)
             return best_edge
 
-        def backward_step(
-            line: str, best_edge: List[Tuple[int, int]]
-        ) -> List[str]:
+        def backward(line: str, best_edge: List[Tuple[int, int]]) -> List[str]:
             words = []
             next_edge = best_edge[-1]
             while next_edge:
@@ -74,8 +70,8 @@ class Viterbi(UnigramLM):
         res = []
         with open(path_input) as f_in:
             for line in map(lambda x: x.strip(), f_in):
-                best_edge = forward_step(line)
-                words = backward_step(line, best_edge)
+                best_edge = forward(line)
+                words = backward(line, best_edge)
                 res.append(" ".join(words) + "\n")
         with open(path_output, "w") as f_out:
             f_out.writelines(res)
@@ -83,13 +79,13 @@ class Viterbi(UnigramLM):
 
 
 def main(args: argparse.Namespace) -> None:
-    Viterbi().load(args.model).solve(
+    Tokenizer().load(args.model).tokenize(
         args.input, args.output, λ_1=args.lambda_1
     )
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog="Viterbi")
+    parser = argparse.ArgumentParser(prog="Tokenizer")
     subparsers = parser.add_subparsers(help="sub-comman help")
 
     parser_train = subparsers.add_parser("train", help="see `train -h`")
