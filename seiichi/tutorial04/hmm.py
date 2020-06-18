@@ -123,13 +123,14 @@ if __name__ == "__main__":
     train_path = "../../data/wiki-en-train.norm_pos"
     # tar_path = "../../test/05-test-input.txt"
     tar_path = "../../data/wiki-en-test.norm"
-    save_path = "./model/test.model"
+    # save_path = "./model/test.model"
+    save_path = "./model/wikien.model"
     hmm = HMM()
     hmm.train(train_path).save_model(save_path)
     hmm.load_model(save_path)
     # hmm.out_probs()
     res = hmm.pos_tagging(tar_path)
-    with open("./out/test.txt", "w") as f:
+    with open("./out/wikien.txt", "w") as f:
         for r in res: f.write(r+"\n")
 
 
