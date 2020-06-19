@@ -86,7 +86,8 @@ class HMM(object):
             for prev in self.context.keys():
                 for next in self.context.keys():
                     if best_score[i].get(prev, -1) != -1 and self.transition[prev].get(next, -1) != -1:
-                        score = best_score[i][prev] + (-1) * np.log2(self.calc_transition_prob(prev, next)) + (-1) * np.log2(self.calc_emittion_prob(next, words[i]))
+                        score = best_score[i][prev] + (-1) * np.log2(self.calc_transition_prob(prev, next)) \
+                             + (-1) * np.log2(self.calc_emittion_prob(next, words[i]))
                         if best_score[i+1].get(next, -1) == -1 or (best_score[i+1][next] > score):
                             best_score[i+1][next] = score
                             best_edge[i+1][next] = tuple([i, prev])
@@ -111,7 +112,7 @@ class HMM(object):
     def pos_tagging(self, tar_path):
         data = self.load_data(tar_path)
         pos_tags = []
-        for line in data:
+        for line in tqdm(data):
             edge = self.forward(line)
             tags = self.backward(line, edge)
             pos_tags.append(tags)
@@ -138,7 +139,7 @@ if __name__ == "__main__":
 # 解説: https://seiichiinoue.github.io/post/hmm/
 
 """results
-% perl ../../script/gradepos.pl ../../data/wiki-en-test.pos ./out/test.txt 
+% perl ../../script/gradepos.pl ../../data/wiki-en-test.pos ./out/wikien.txt 
 Accuracy: 90.82% (4144/4563)
 
 Most common mistakes:
