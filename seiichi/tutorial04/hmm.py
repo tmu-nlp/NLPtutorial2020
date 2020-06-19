@@ -8,7 +8,7 @@ from tqdm import tqdm
 # from tutorial03.ngram import NgramModel
 
 class HMM(object):
-    def __init__(self, BOS="<s>", EOS="</s>", lambda_1=0.95, lambda_2=0.05):
+    def __init__(self, BOS="<s>", EOS="</s>", lambda_1=0.95):
         # self.n_context_cnt = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
         self.context = defaultdict(int)
         self.transition = defaultdict(lambda: defaultdict(int))
@@ -16,9 +16,7 @@ class HMM(object):
         self.BOS = BOS
         self.EOS = EOS
         self.lambda_1 = lambda_1
-        self.lambda_2 = lambda_2
         self.V = 1e6
-        self.tar_data = None
 
     def load_data(self, path: str):
         with open(path, "r") as f:
@@ -91,7 +89,6 @@ class HMM(object):
                         if best_score[i+1].get(next, -1) == -1 or (best_score[i+1][next] > score):
                             best_score[i+1][next] = score
                             best_edge[i+1][next] = tuple([i, prev])
-        # best_score[len(words)+1][self.EOS] = min(best_score[len(words)].values())
         best_score[len(words)+1][self.EOS] = 1e10
         best_edge[len(words)+1][self.EOS] = None
         for tag in self.context.keys():
