@@ -24,17 +24,17 @@ class UnigramModel(object):
                 if word not in self.word_cnt.keys():
                     self.word_cnt[word] = 0
                 self.word_cnt[word] += 1
-        return
+        return self
 
-    def save(self, model_path: str):
+    def save_model(self, model_path: str):
         with open(model_path, "wb") as f:
             pickle.dump(self.word_cnt, f)
-        return
+        return self
 
-    def load(self, model_path: str):
+    def load_model(self, model_path: str):
         with open(model_path, "rb") as f:
             self.word_cnt = pickle.load(f)
-        return
+        return self
 
     def calc_word_prob(self, word: str, v: int, ld: float):
         prob = (1-ld) / v
