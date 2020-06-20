@@ -4,7 +4,7 @@ from math import log
 
 from pprint import pprint
 
-class HMM():
+class HiddenMarkovModel():
     def __init__(self):
         """ Hidden Markov Model (HMM)
         :param self.transition: dict, [prevtag_nexttag]: count
@@ -112,7 +112,7 @@ class HMM():
             tags.append(tag)
             next_edge = best_edge[next_edge]
         tags = tags[::-1]
-        return print(' '.join(tags))
+        print(' '.join(tags))
 
     def test(self, file_path):
         """ estimate tags
@@ -131,8 +131,8 @@ class HMM():
 if __name__ == '__main__':
     #train_file_path = '../test/05-train-input.txt'
     train_file_path = '../data/wiki-en-train.norm_pos'
-    HMM = HMM()
-    HMM.train(file_path=train_file_path)
+    hmm = HiddenMarkovModel()
+    hmm.train(file_path=train_file_path)
     #pprint(HMM.transition)
     #pprint(HMM.emit)
     #pprint(HMM.context)
@@ -141,5 +141,5 @@ if __name__ == '__main__':
     #pprint(HMM.possible_tags)
     #test_file_path = '../test/05-test-input.txt'
     test_file_path = '../data/wiki-en-test.norm'
-    HMM.test(file_path=test_file_path)
+    hmm.test(file_path=test_file_path)
 
