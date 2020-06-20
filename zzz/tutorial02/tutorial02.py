@@ -33,6 +33,18 @@ class Ngram:
         for (gram, num) in self.gram_counter.items():
             self.prob[gram] = float(num) / self.context_counter[' '.join(gram.split(' ')[:-1])]
 
+    def fit_tag(self, text, tags):
+        gram_counter = Counter()
+        tag_counter = Counter()
+        for (line, line_tag) in zip(text, tags):
+            for (word, tag) in zip(line, line_tag):
+                gram = word + ' ' + tag
+                gram_counter[gram] += 1
+                tag_counter[tag] += 1
+
+        for (gram, num) in gram_counter.items():
+            self.prob[gram] = float(num) / tag_counter[gram.split(' ')[-1]]
+
     def train(self, text: str):
         self.fit(text)
 
