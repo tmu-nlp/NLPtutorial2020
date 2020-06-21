@@ -44,10 +44,9 @@ class UnigramLanguageModel():
 
     def load_txt(self, filename: str):
         with open(filename) as f:
-            for word, w_prob in self.probs.items():
-                for line in f:
-                    word, prob = line.split()
-                    self.probs[word] = float(prob)
+            for line in f:
+                word, prob = line.split()
+                self.probs[word] = float(prob)
 
     def test(self, filename: str):
         # Validate
