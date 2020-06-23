@@ -12,15 +12,16 @@ import copy
 import numpy as np
 from tqdm import tqdm
 from collections import defaultdict
-from common.layers import Affine, Sigmoid, SigmoidWithLoss
+from common.layers import Affine, SigmoidWithLoss
 from common.optimizer import SGD
+from common.functions import sigmoid
 
 class Perceptron(object):
     def __init__(self, input_size, output_size):
-        W1 = np.random.randn(input_size, output_size)
-        b1 = np.random.randn(output_size)
+        W1 = 0.01 * np.random.randn(input_size, output_size)
+        b1 = np.zeros(output_size)
         self.loss_layer = SigmoidWithLoss()
-        self.layers = [Affine(W1, b1), Sigmoid()]
+        self.layers = [Affine(W1, b1)]
         self.params, self.grads = [], []
         for layer in self.layers:
             self.params += layer.params
@@ -31,7 +32,7 @@ class Perceptron(object):
         for layer in self.layers:
              X = layer.forward(X)
         return X
-
+    
     def forward(self, X, y):
         score = self.predict(X)
         loss = self.loss_layer.forward(score, y)
@@ -64,74 +65,81 @@ def load_data(path, labeled=True):
             vocab.add(w)
     return X, y, vocab
 
-def remove_duplicate(params, grads):
-    params, grads = params[:], grads[:]
-    while True:
-        find_flg = False
-        L = len(params)
-        for i in range(0, L - 1):
-            for j in range(i + 1, L):
-                if params[i] is params[j]:
-                    grads[i] += grads[j] 
-                    find_flg = True
-                    params.pop(j)
-                    grads.pop(j)
-                elif params[i].ndim == 2 and params[j].ndim == 2 and \
-                     params[i].T.shape == params[j].shape and np.all(params[i].T == params[j]):
-                    grads[i] += grads[j].T
-                    find_flg = True
-                    params.pop(j)
-                    grads.pop(j)
-                if find_flg: break
-            if find_flg: break
-        if not find_flg: break
-    return params, grads
-
 def train_model(model, optimizer, X, y, batch_size=32, max_epoch=10):
     batch_size = batch_size
     data_size = len(X)
     max_epoch = max_epoch
     max_iters = data_size // batch_size
-    total_loss = 0
-    loss_count = 0
     for epoch in range(max_epoch):
         idx = np.random.permutation(np.arange(data_size))
         X = X[idx]
         y = y[idx]
+        total_loss = 0
+        loss_count = 0
         for iters in range(max_iters):
             batch_X = X[iters*batch_size:(iters+1)*batch_size]
             batch_y = y[iters*batch_size:(iters+1)*batch_size]
             loss = model.forward(batch_X, batch_y)
+            # pred_y = model.predict(batch_X)
             model.backward()
-            params, grads = remove_duplicate(model.params, model.grads)
-            optimizer.update(params, grads)
+            optimizer.update(model.params, model.grads)
             total_loss += loss
             loss_count += 1
-
+            # from sklearn.metrics import accuracy_score
+            # print(accuracy_score(batch_y, np.int32(sigmoid(pred_y)>=0.5)))
         avg_loss = total_loss / loss_count    
         print("epoch {}, loss {:.3f}, ".format(epoch, avg_loss))
-        total_loss, loss_count = 0, 0
+
+def get_tdidf(vectorizer, train_X):
+    X = vectorizer.transform(list(map(lambda x: " ".join(x), train_X)))
+    return X.toarray()
+
+def get_reduced(svd, train_X):
+    X = svd.transform(train_X)
+    return X
 
 if __name__ == '__main__':
     from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.decomposition import TruncatedSVD
+    from scipy.linalg import svd
     from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
     # train = "../../test/03-train-input.txt"
     train = "../../data/titles-en-train.labeled"
-    test = "../../data/titles-en-test.word"
+    test = "../../data/titles-en-test.labeled"
     train_X, train_y, train_v = load_data(train)
-    # test_X, test_y, test_v = load_data(test, labeled=False)
-    vectorizer = TfidfVectorizer(max_df=0.9)
-    # print(train_X)
-    X = vectorizer.fit_transform(list(map(lambda x: " ".join(x), train_X)))
-    words = vectorizer.get_feature_names()
-    train_X = X.toarray()
+    test_X, test_y, test_v = load_data(test)
+    v = TfidfVectorizer(max_df=0.8)
+    v.fit(list(map(lambda x: " ".join(x), train_X)))
+    train_X, test_X = get_tdidf(v, train_X), get_tdidf(v, test_X)
+    svd = TruncatedSVD(n_components=200, random_state=3939)
+    svd.fit(train_X)
+    train_X, test_X = get_reduced(svd, train_X), get_reduced(svd, test_X)
     train_X, train_y = np.array(train_X).astype(np.float32), np.array(train_y).astype(np.int32)
+    test_X, test_y = np.array(test_X).astype(np.float32), np.array(test_y).astype(np.int32)
+    print(train_X, train_y)
     model = Perceptron(len(train_X[0]), 1)
-    optimizer = SGD(lr=0.001)
+    optimizer = SGD(lr=0.5)
     batch_size = 32
-    max_epoch = 30
+    max_epoch = 50
     train_model(model, optimizer, train_X, train_y, batch_size, max_epoch)
-    pred_y = model.predict(train_X)
-    print(accuracy_score(train_y, np.int32(pred_y >= 0.5)))
-    print(confusion_matrix(train_y, np.int32(pred_y >= 0.5)))
+    pred_y = model.predict(test_X)
+    pred_y = sigmoid(pred_y)
+    # print(pred_y)
+    print(accuracy_score(test_y, np.int32(pred_y >= 0.5)))
+    print(confusion_matrix(test_y, np.int32(pred_y >= 0.5)))
+    print(classification_report(test_y, np.int32(pred_y >= 0.5)))
+
+"""result
+0.9256110520722636
+[[1424   53]
+ [ 157 1189]]
+              precision    recall  f1-score   support
+
+           0       0.90      0.96      0.93      1477
+           1       0.96      0.88      0.92      1346
+
+    accuracy                           0.93      2823
+   macro avg       0.93      0.92      0.93      2823
+weighted avg       0.93      0.93      0.93      2823
+"""

@@ -68,6 +68,8 @@ class SigmoidWithLoss:
     def forward(self, x, t):
         self.t = t
         self.y = 1 / (1 + np.exp(-x))
+        # from sklearn.metrics import mean_squared_error, log_loss
+        # self.loss = log_loss(self.t, self.y)
         self.loss = cross_entropy_error(np.c_[1 - self.y, self.y], self.t)
         return self.loss
 
@@ -75,34 +77,3 @@ class SigmoidWithLoss:
         batch_size = self.t.shape[0]
         dx = (self.y - self.t) * dout / batch_size
         return dx
-
-# class Sign:
-#     def __init__(self):
-#         self.params, self.grads = [], []
-#         self.out = None
-
-#     def forward(self, x):
-#         out = 1 if x >= 0 else -1
-#         self.out = out
-#         return out
-        
-#     def backward(self, dout):
-#         return dout
-
-# class SignWithLoss:
-#     def __init__(self):
-#         self.params, self.grads = [], []
-#         self.loss = None
-#         self.y = None
-#         self.t = None
-
-#     def forward(self, x, t):
-#         self.t = t
-#         self.y = 1 if x >= 0 else -1
-#         self.loss = cross_entropy_error(np.c[1-self.y, self.y], self.t)
-#         return self.loss
-        
-#     def backward(self, dout=1):
-#         batch_size = self.t.shape[0]
-#         dx = -self.t * dout
-#         return dx
