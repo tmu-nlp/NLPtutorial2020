@@ -1,0 +1,10 @@
+UNI:,	-1
+UNI:A	-1
+UNI:Kyoto	0
+UNI:Maizuru	-1
+UNI:Shoken	1
+UNI:born	1
+UNI:in	0
+UNI:located	-1
+UNI:monk	1
+UNI:site	-1
