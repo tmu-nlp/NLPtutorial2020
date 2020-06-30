@@ -1,5 +1,5 @@
 """
-single-layer perceptron
+support vector machine (actually, this model is not SVM)
 input: sentence from article of wikipedia
 output: whether articles topic is about a person or not
 """
