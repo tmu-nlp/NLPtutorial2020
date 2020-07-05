@@ -49,10 +49,11 @@ class SupportVectorMachine():
         """
         last_iter = self.last.get(feature, 0)
         if iter != last_iter:
-            if abs(self.w[feature]) < self.c*(iter-last_iter):
+            c_size = self.c*(iter-last_iter)
+            if abs(self.w[feature]) < c_size:
                 self.w[feature] = 0
             else:
-                self.w[feature] -= sign(self.w[feature]) * self.c
+                self.w[feature] -= sign(self.w[feature]) * c_size
             self.last[feature] = iter
         return self.w[feature]
 
@@ -82,6 +83,8 @@ class SupportVectorMachine():
 
         :param file_path: a path of training dataset
         :param max_epoch: int, max epoch
+        :param seed: int, random seed
+        :param prev_w: defaultdict, weights before normalization
         """
         random.seed(seed)
         with open(file_path) as fp:
@@ -91,11 +94,14 @@ class SupportVectorMachine():
             for iter, line in enumerate(lines):
                 y_ans, sentence = line.strip().split('\t')
                 phi = self.create_features(sentence)
+                prev_w = self.w
                 _, score = self.predict_one(phi, iter)
                 y_ans = int(y_ans)
                 value = score * y_ans
                 if value <= self.margin:
                     self.update_weights(phi, y_ans)
+                else:
+                    self.w = prev_w
 
     def predict(self, input_file):
         """ predict all sentences
