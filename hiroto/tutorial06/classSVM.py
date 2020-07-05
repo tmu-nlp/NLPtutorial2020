@@ -1,4 +1,4 @@
-# python SVM.py ../data/titles-en-train.labeled ../data/titles-en-train.word ../data/titles-en-test.word
+# python classSVM.py ../data/titles-en-train.labeled ../data/titles-en-train.word ../data/titles-en-test.word
 from collections import defaultdict
 import sys
 import pickle
@@ -13,6 +13,7 @@ class SVM():
         self.train_fname = train_fname
         self.test1_fname = test1_fname
         self.test2_fname = test2_fname
+        self.flag = True
         with open(train_fname) as train_f, \
              open(test1_fname) as test1_f, \
              open(test2_fname) as test2_f:
@@ -20,6 +21,12 @@ class SVM():
             self.test1_text = test1_f.readlines()
             self.test2_text = test2_f.readlines()
     
+    def train_mode(self):
+        self.flag = True
+    
+    def eval_mode(self):
+        self.flag = False
+
     def train(self, margin, c, max_iter=20):
         self.c = c
         self.max_iter = max_iter
@@ -29,19 +36,22 @@ class SVM():
         self.itr = 0
         for _ in tqdm(range(max_iter)):
             for line in self.train_text:
+                self.train_mode()
                 label, sent = line.split('\t')
                 y = int(label)
                 #一文中で出現した各単語の頻度をまとめた辞書(key:name, value:freqency)
                 phi = self.create_features(sent)
-                val = self.cal_val(phi, y)
+                #val = self.cal_val(phi, y)
                 #ラベルを予測
                 label_pred = self.predict_one(phi)
+                val = self.cal_val(phi, y)
                 #print(type(self.weights))
                 #マージンに入っているか
                 if val <= margin:
                     self.itr += 1
                     self.update_weights(phi, y)
                     #print(type(self.weights))
+            self.eval_mode()
             self.accs1.append(self.predict_all(self.test1_fname))
             self.accs2.append(self.predict_all(self.test2_fname))
     
@@ -58,7 +68,7 @@ class SVM():
         score = 0
         for name, value in phi.items():
             weight = self.getw(name)
-            score += value * self.weights[name]
+            score += value * weight
         return np.sign(score)
     
     def cal_val(self, phi, y):
@@ -73,13 +83,14 @@ class SVM():
             self.weights[name] += value * y
     
     def getw(self, name):
-        if self.itr != self.last[name]:
-            c_size = self.c * (self.itr - self.last[name])
-            if abs(self.weights[name]) <= c_size:
-                self.weights[name] = 0
-            else:
-                self.weights[name] -= np.sign(self.weights[name]) * c_size
-            self.last[name] = self.itr
+        if self.flag == True:
+            if self.itr != self.last[name]:
+                c_size = self.c * (self.itr - self.last[name])
+                if abs(self.weights[name]) <= c_size:
+                    self.weights[name] = 0
+                else:
+                    self.weights[name] -= np.sign(self.weights[name]) * c_size
+                self.last[name] = self.itr
         return self.weights[name]
     
     def predict_all(self, input_fname):
@@ -103,7 +114,7 @@ class SVM():
         plt.plot(list(range(self.max_iter)), self.accs1)
         plt.plot(list(range(self.max_iter)), self.accs2)
         plt.title(f"c={c}, margin={margin}")
-        plt.savefig(f"./picture/c{c}_margin{margin}.png")
+        plt.savefig(f"./picture_sub/c{c}_margin{margin}.png")
         plt.clf()
 
     def param_search(self, margins, cs, max_iter=20):
@@ -113,7 +124,7 @@ class SVM():
                 print(f"c : {c}, margin : {margin}")
                 print(f"train acc : {self.accs1[-1]}")
                 print(f"test acc : {self.accs2[-1]}")
-                self.draw(margin, c)
+                #self.draw(margin, c)
     
 def main():
     train_fname = sys.argv[1]
@@ -122,58 +133,73 @@ def main():
     svm = SVM(train_fname, test1_fname, test2_fname)
     margin_params = [0.1, 1.0, 10]
     c_params = [1.0, 0.1, 0.01, 0.001, 0.0001]
-    svm.param_search(margins=margin_params, cs=c_params, max_iter=10)
+    svm.param_search(margins=margin_params, cs=c_params, max_iter=30)
 
 
 if __name__ == '__main__':
     main()
 
 '''
+100%|███████████████████████████████████████████████████████████████████████████████| 30/30 [00:34<00:00,  1.15s/it]
 c : 1.0, margin : 0.1
-train acc : 0.3779234585400425
-test acc : 0.3705278072972016
+train acc : 0.6371367824238129
+test acc : 0.5894438540559688
+100%|███████████████████████████████████████████████████████████████████████████████| 30/30 [00:45<00:00,  1.50s/it]
 c : 0.1, margin : 0.1
-train acc : 0.6253543586109143
-test acc : 0.624512929507616
+train acc : 0.630846917080085
+test acc : 0.6255756287637265
+100%|███████████████████████████████████████████████████████████████████████████████| 30/30 [00:48<00:00,  1.61s/it]
 c : 0.01, margin : 0.1
-train acc : 0.8683557760453579
-test acc : 0.8650371944739639
+train acc : 0.7144755492558469
+test acc : 0.7077577045696068
+100%|███████████████████████████████████████████████████████████████████████████████| 30/30 [00:47<00:00,  1.57s/it]
 c : 0.001, margin : 0.1
-train acc : 0.9558823529411765
-test acc : 0.9192348565356004
+train acc : 0.9238128986534373
+test acc : 0.8901877435352462
+100%|███████████████████████████████████████████████████████████████████████████████| 30/30 [00:43<00:00,  1.43s/it]
 c : 0.0001, margin : 0.1
-train acc : 0.9865343727852587
-test acc : 0.9298618490967057
+train acc : 0.9988483345145287
+test acc : 0.9323414806942969
+100%|███████████████████████████████████████████████████████████████████████████████| 30/30 [00:34<00:00,  1.16s/it]
 c : 1.0, margin : 1.0
-train acc : 0.4591601700921332
-test acc : 0.44668792065178886
+train acc : 0.655474840538625
+test acc : 0.6007793127878144
+100%|███████████████████████████████████████████████████████████████████████████████| 30/30 [00:47<00:00,  1.58s/it]
 c : 0.1, margin : 1.0
-train acc : 0.6443125442948263
-test acc : 0.6376195536663124
+train acc : 0.6424521615875266
+test acc : 0.6372653205809422
+100%|███████████████████████████████████████████████████████████████████████████████| 30/30 [00:46<00:00,  1.56s/it]
 c : 0.01, margin : 1.0
-train acc : 0.7777285613040397
-test acc : 0.7718738930216082
+train acc : 0.8804039688164422
+test acc : 0.8660998937300743
+100%|███████████████████████████████████████████████████████████████████████████████| 30/30 [00:44<00:00,  1.47s/it]
 c : 0.001, margin : 1.0
-train acc : 0.9619064493267186
-test acc : 0.9241941197307828
+train acc : 0.97537207654146
+test acc : 0.9259652851576338
+100%|███████████████████████████████████████████████████████████████████████████████| 30/30 [00:43<00:00,  1.45s/it]
 c : 0.0001, margin : 1.0
-train acc : 0.9872430900070872
-test acc : 0.9312787814381863
+train acc : 0.9990255138199858
+test acc : 0.9355295784626284
+100%|███████████████████████████████████████████████████████████████████████████████| 30/30 [00:41<00:00,  1.38s/it]
 c : 1.0, margin : 10
-train acc : 0.27391920623671157
-test acc : 0.2685086787105916
+train acc : 0.53756201275691
+test acc : 0.5239107332624867
+100%|███████████████████████████████████████████████████████████████████████████████| 30/30 [00:45<00:00,  1.51s/it]
 c : 0.1, margin : 10
-train acc : 0.5530652019844082
-test acc : 0.5423308537017357
+train acc : 0.5833628632175761
+test acc : 0.5745660644704216
+100%|███████████████████████████████████████████████████████████████████████████████| 30/30 [00:44<00:00,  1.48s/it]
 c : 0.01, margin : 10
-train acc : 0.8486888731396173
-test acc : 0.8466170740347149
+train acc : 0.8586109142452162
+test acc : 0.8586609989373007
+100%|███████████████████████████████████████████████████████████████████████████████| 30/30 [00:46<00:00,  1.56s/it]
 c : 0.001, margin : 10
-train acc : 0.9594259390503189
-test acc : 0.9241941197307828
+train acc : 0.9687278525868178
+test acc : 0.9252568189868934
+100%|███████████████████████████████████████████████████████████████████████████████| 30/30 [00:44<00:00,  1.48s/it]
 c : 0.0001, margin : 10
-train acc : 0.9920269312544295
-test acc : 0.9319872476089267
+train acc : 0.9994684620836286
+test acc : 0.9344668792065179
 
 Perceptron:
 Accuracy = 92.702798%
