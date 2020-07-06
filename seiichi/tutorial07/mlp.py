@@ -126,7 +126,7 @@ if __name__ == '__main__':
     test_X, test_y = np.array(test_X).astype(np.float32), np.array(test_y).astype(np.int32)
     # print(train_X, train_y)
     model = MLP(len(train_X[0]), len(train_X[0])//2, 1)
-    # optimizer = SGD(lr=0.5)
+    # optimizer = SGD(lr=0.01)
     optimizer = Adam(lr=0.01)
     batch_size = 32
     max_epoch = 50
@@ -151,7 +151,20 @@ if __name__ == '__main__':
    macro avg       0.93      0.93      0.93      2823
 weighted avg       0.93      0.93      0.93      2823
 
-#2 Adam(lr=0.01)
+#2 SGD(lr=0.01)
+0.9284449167552249
+[[1399   78]
+ [ 124 1222]]
+              precision    recall  f1-score   support
+
+          -1       0.92      0.95      0.93      1477
+           1       0.94      0.91      0.92      1346
+
+    accuracy                           0.93      2823
+   macro avg       0.93      0.93      0.93      2823
+weighted avg       0.93      0.93      0.93      2823
+
+#3 Adam(lr=0.01)
 0.9404888416578109
 [[1389   88]
  [  80 1266]]
