@@ -46,20 +46,21 @@ def predict_all(model_file, input_file):
 
 class perceptron:
     def train_perceptron(self, model_file, output_file):
-        weight = defaultdict(int)
         with open(model_file) as f:
             model = f.readlines()
         
-        for line in model:
-            line = line.strip().split()
-            features = line[1:]
-            label = int(line[0])
+        weight = defaultdict(int)
 
-            phi = create_features(features)
-            y_predict = predict_one(weight, phi)
+        for iter in range(10):
+            for line in model:
+                line = line.strip().split()
+                features = line[1:]
+                label = int(line[0])
+                phi = create_features(features)
+                y_predict = predict_one(weight, phi)
 
-            if y_predict != label:
-                update_weight(weight, phi, label)
+                if y_predict != label:
+                    update_weight(weight, phi, label)
     
         ans = open(output_file, "w")
         for key, value in weight.items():
@@ -74,4 +75,6 @@ Perceptron = perceptron()
 print(Perceptron.train_perceptron("titles-en-train.labeled", "my_ans.txt"))
 print(Perceptron.test_perceptron("my_ans.txt", "titles-en-test.word"))
 
-#Accuracy = 90.967056%
+# Accuracy = 90.967056% (epoch = 1)
+# Accuracy = 93.446688% (epoch = 10)
+# Accuracy = 93.552958% (epoch = 100)
