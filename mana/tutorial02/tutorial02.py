@@ -2,7 +2,8 @@ from collections import defaultdict
 import math
 import numpy
 
-class Ngram():
+
+class Ngram:
     def __init__(self, lambda_1, lambda_2):
         self.counts = defaultdict(int)
         self.context_counts = defaultdict(int)
@@ -18,33 +19,36 @@ class Ngram():
                 line.insert(0, "<s>")
 
                 for i in range(1, len(line)):
-                    self.counts[" ".join(line[i-1:i+1])] += 1
-                    self.context_counts[line[i-1]]+= 1
+                    self.counts[" ".join(line[i - 1 : i + 1])] += 1
+                    self.context_counts[line[i - 1]] += 1
                     self.counts[line[i]] += 1
                     self.context_counts[""] += 1
 
         for ngram in self.counts:
             context = ngram.split(" ")
             context = "".join(context[:-1])
-            probability = self.counts[ngram]/self.context_counts[context]
+            probability = self.counts[ngram] / self.context_counts[context]
             model[ngram] = probability
         return model
 
     def testNgram(self, modeldic, testFile):
         W = 0
         H = 0
-        V = 10**6
+        V = 10 ** 6
         with open(testFile, "r") as test:
             for line in test:
                 line = line.lower().split()
                 line.append("</s>")
                 line.insert(0, "<s>")
-                for i in range(1, len(line)-1):
-                    P1 = self.lambda_1*modeldic[line[i]] + (1-self.lambda_1)/V
-                    P2 = self.lambda_2*modeldic[" ".join(line[i-1:i])] + (1-self.lambda_2)*P1
-                    H += math.log(1/P2, 2)
+                for i in range(1, len(line) - 1):
+                    P1 = self.lambda_1 * modeldic[line[i]] + (1 - self.lambda_1) / V
+                    P2 = (
+                        self.lambda_2 * modeldic[" ".join(line[i - 1 : i])]
+                        + (1 - self.lambda_2) * P1
+                    )
+                    H += math.log(1 / P2, 2)
                     W += 1
-        return str(round(H/W, 4))
+        return str(round(H / W, 4))
 
 
 if __name__ == "__main__":
@@ -72,5 +76,5 @@ if __name__ == "__main__":
 
     NgramLM = Ngram(0.95, 0.5)
     model = NgramLM.trainNgram(trainpath)
-    print("entropy = "+NgramLM.testNgram(model, testpath), end=", ")
+    print("entropy = " + NgramLM.testNgram(model, testpath), end=", ")
     print("when lambda1:0.95, lambda2:0.5")
