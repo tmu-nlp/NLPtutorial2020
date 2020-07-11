@@ -96,6 +96,10 @@ def get_tdidf(vectorizer, train_X):
     X = vectorizer.transform(list(map(lambda x: " ".join(x), train_X)))
     return X.toarray()
 
+def get_cntvec(vectorizer, train_X):
+    X = vectorizer.transform(list(map(lambda x: " ".join(x), train_X)))
+    return X.toarray()
+
 def get_reduced(svd, train_X):
     X = svd.transform(train_X)
     return X
@@ -116,6 +120,9 @@ if __name__ == '__main__':
     test = "../../data/titles-en-test.labeled"
     train_X, train_y, train_v = load_data(train)
     test_X, test_y, test_v = load_data(test)
+    # cv = CountVectorizer()
+    # cv.fit(list(map(lambda x: " ".join(x), train_X)))
+    # train_X, test_X = get_cntvec(cv, train_X), get_cntvec(cv, train_X)
     v = TfidfVectorizer(max_df=0.8)
     v.fit(list(map(lambda x: " ".join(x), train_X)))
     train_X, test_X = get_tdidf(v, train_X), get_tdidf(v, test_X)
