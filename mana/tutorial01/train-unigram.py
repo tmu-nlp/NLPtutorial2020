@@ -26,13 +26,14 @@ def train_unigram(file):
         words = line.split()
         words.append("</s>")
         for word in words:
-            counts[word.lower()] += 1   #using .lower() --> +0.05 (coverage)
+            counts[word.lower()] += 1  # using .lower() --> +0.05 (coverage)
             total_count += 1
 
     modelFile = open("model_file.txt", "w")
     for word in counts:
-        probability = counts[word]/total_count
-        modelFile.write(word+" "+str(probability)+"\n")
+        probability = counts[word] / total_count
+        modelFile.write(word + " " + str(probability) + "\n")
+
 
 if __name__ == "__main__":
     train_unigram("./data/wiki-ja-train.word")

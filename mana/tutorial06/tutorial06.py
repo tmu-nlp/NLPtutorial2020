@@ -1,4 +1,13 @@
 from collections import defaultdict
+from math import sin
+
+
+def predict_margin(w, phi, label):
+    score = 0
+    for key, value in phi.items():
+        if key in w:
+            score += value * w[key] * label
+    return score
 
 
 def predict_one(w, phi):
@@ -19,9 +28,15 @@ def create_features(x):
     return phi
 
 
-def update_weight(w, phi, y):
+def update_weight(w, phi, y, c):
     for key, value in phi.items():
         w[key] += value * y
+
+    for key, value in w.items():
+        if abs(value) < c:
+            w[key] = 0
+        else:
+            w[key] -= sin(value) * c
 
 
 def predict_all(model_file, input_file):
@@ -34,7 +49,7 @@ def predict_all(model_file, input_file):
         line = line.strip().split()
         feature = line[0]
         weight = line[1]
-        weights[feature] = int(weight)
+        weights[feature] = float(weight)
 
     with open(input_file, "r") as f1:
         inputFile = f1.readlines()
@@ -49,8 +64,8 @@ def predict_all(model_file, input_file):
     output.close()
 
 
-class perceptron:
-    def train_perceptron(self, model_file, output_file):
+class svm:
+    def train_svm(self, model_file, output_file, margin):
         with open(model_file) as f:
             model = f.readlines()
 
@@ -62,25 +77,36 @@ class perceptron:
                 features = line[1:]
                 label = int(line[0])
                 phi = create_features(features)
-                y_predict = predict_one(weight, phi)
+                val = predict_margin(weight, phi, label)
 
-                if y_predict != label:
-                    update_weight(weight, phi, label)
+                if val <= margin:
+                    update_weight(weight, phi, label, 0.0001)
 
         ans = open(output_file, "w")
         for key, value in weight.items():
             ans.write(key + "\t" + str(value) + "\n")
         ans.close()
 
-    def test_perceptron(self, model_file, test_file):
+    def test_svm(self, model_file, test_file):
         predict_all(model_file, test_file)
 
 
-Perceptron = perceptron()
+svmM = svm()
 
-print(Perceptron.train_perceptron("titles-en-train.labeled", "my_ans.txt"))
-print(Perceptron.test_perceptron("my_ans.txt", "titles-en-test.word"))
+print(svmM.train_svm("titles-en-train.labeled", "my_ans.txt", 100))
+print(svmM.test_svm("my_ans.txt", "titles-en-test.word"))
 
-# Accuracy = 90.967056% (epoch = 1)
-# Accuracy = 93.446688% (epoch = 10)
-# Accuracy = 93.552958% (epoch = 100)
+# Results
+# epoch = 1
+# Accuracy = 91.746369% (svm, margin = 0)
+# Accuracy = 92.454835% (svm, margin = 10)
+# Accuracy = 92.490259% (svm, margin = 100)
+# Accuracy = 90.967056% (perceptron)
+
+# epoch = 10
+# Accuracy = 92.242295% (svm, margin = 0)
+# Accuracy = 91.888062% (svm, margin = 10)
+# Accuracy = 93.517535% (svm, margin = 100)
+# Accuracy = 93.446688% (perceptron)
+
+# Accuracy = 93.552958% (perceptron, epoch = 100)

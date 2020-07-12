@@ -1,6 +1,7 @@
 import sys
 import math
 
+
 def test_unigram(model_file, test_file):
     """
     what this function does:
@@ -46,14 +47,14 @@ def test_unigram(model_file, test_file):
         for word in words:
             word = word.lower()
             W += 1
-            P = lambda_unk/V
+            P = lambda_unk / V
             if word in probabilities:
-                P += lambda_1*probabilities[word]
+                P += lambda_1 * probabilities[word]
             else:
                 unk_words += 1
-            H += math.log(1/P, 2)
-    return "entropy = " + str(H/W) + "\n" \
-            + "coverage = " + str((W-unk_words)/W)
+            H += math.log(1 / P, 2)
+    return "entropy = " + str(H / W) + "\n" + "coverage = " + str((W - unk_words) / W)
+
 
 if __name__ == "__main__":
     print(test_unigram("model_file.txt", "wiki-en-test.word"))
