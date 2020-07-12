@@ -79,3 +79,48 @@ if __name__ == "__main__":
 #diff test_model_file.txt ../../test/03-train-answer.txt 
 #../../script/grade-prediction.py ../../data/titles-en-test.labeled my_answer.pos
 #Accuracy = 90.967056%
+
+"""
+class Perceptoron():
+    # dataはlist型 [[x1, y1], [x2, y2], ...]
+    def __init__(self, data):
+        self.ids = defaultdict(lambda: len(self.ids))
+        for y, x in data:
+            self.create_features(x)
+        self.w = np.zeros(len(self.ids))
+
+    def create_features(self, x):
+        phi = [0]*len(self.ids)
+        words = x.split()
+        for word in words:
+            if self.ids["UNI:"+word] < len(phi):
+                phi[self.ids["UNI:"+word]] += 1
+            else: phi.append(1)
+        return phi
+
+    def update_weights(self, phi, y):
+        for ids, value in enumerate(phi):
+            self.w[ids] += value*y
+
+    def fit(self, data, iter=1):
+        for _ in range(iter):
+            for y, x in data:
+                phi = self.create_features(x)
+
+                y_prime = self.predict_one(phi)
+                if y != y_prime:
+                    self.update_weights(phi, y)
+        print(self.w)
+
+    def predict_one(self, phi):
+        score = 0
+        for ids, value in enumerate(phi):
+            score += value*self.w[ids]
+        return (1 if score >= 0 else -1)
+
+    #dataは["文", "文"...]
+    def predict(self, data):
+        for x in data:
+            phi = self.create_features(x)
+            y_prime = self.predict_one(phi)
+"""
