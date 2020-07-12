@@ -1,7 +1,7 @@
 import sys
 sys.path.append("../")
 import numpy as np
-from common.functions import cross_entropy_error
+from common.functions import cross_entropy_error, mean_squared_error
 
 class MatMul:
     def __init__(self, W):
@@ -71,6 +71,38 @@ class SigmoidWithLoss:
         # from sklearn.metrics import mean_squared_error, log_loss
         # self.loss = log_loss(self.t, self.y)
         self.loss = cross_entropy_error(np.c_[1 - self.y, self.y], self.t)
+        return self.loss
+
+    def backward(self, dout=1):
+        batch_size = self.t.shape[0]
+        dx = (self.y - self.t) * dout / batch_size
+        return dx
+
+class Tanh:
+    def __init__(self):
+        self.params, self.grads = [], []
+        self.out = None
+
+    def forward(self, x):
+        out = np.tanh(x)
+        self.out = out
+        return out
+
+    def backward(self, dout):
+        dx = dout * (1.0 - self.out * self.out)
+        return dx
+
+class TanhWithLoss:
+    def __init__(self):
+        self.params, self.grads = [], []
+        self.loss = None
+        self.y = None
+        self.t = None
+
+    def forward(self, x, t):
+        self.t = t
+        self.y = np.tanh(x)
+        self.loss = mean_squared_error(self.y, self.t)
         return self.loss
 
     def backward(self, dout=1):
