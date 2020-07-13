@@ -18,18 +18,18 @@ def init_network(feature_size, node, layer):
     net = []
 
     # 1つ目の隠れ層
-    w0 = 2 * np.random.rand(node, feature_size) - 1  # 重みは-1.0以上1.0未満で初期化
+    w0 = 2 * np.random.rand(node, feature_size) - 0.5  # 重みは-1.0以上1.0未満で初期化
     b0 = np.random.rand(1, node)
     net.append((w0, b0))
 
     # 中間層
     while len(net) < layer:
-        w = 2 * np.random.rand(node, node) - 1
+        w = 2 * np.random.rand(node, node) - 0.5
         b = np.random.rand(1, node)
         net.append((w, b))
 
     # 出力層
-    w_o = 2 * np.random.rand(1, node) - 1
+    w_o = 2 * np.random.rand(1, node) - 0.5
     b_o = np.random.rand(1, 1)
 
     net.append((w_o, b_o))
@@ -38,11 +38,11 @@ def init_network(feature_size, node, layer):
 
 
 def forward_nn(net, phi_0):
-    phi = [0 for _ in range(len(net) + 1)]
+    phi = [0 for _ in range(len(net) + 1)]   # phiはリスト
     phi[0] = phi_0
     for i in range(len(net)):
         w, b = net[i]
-        phi[i + 1] = np.tanh(np.dot(w, phi[i]) + b).T
+        phi[i + 1] = np.tanh(np.dot(w, phi[i]) + b).T # リストに入れるのでTransposeする
     # print(phi)
     return phi
 
@@ -53,7 +53,7 @@ def backward_nn(net, phi, label):
     delta[-1] = np.array([label - phi[j][0]])
     delta_prime = np.zeros(j + 1, dtype=np.ndarray)
     for i in range(j, 0, -1):
-        delta_prime[i] = delta[i] * (1 - phi[i] ** 2).T
+        delta_prime[i] = delta[i] * (1 - phi[i] ** 2).T  
         w, _ = net[i - 1]
         delta[i - 1] = np.dot(delta_prime[i], w)
     return delta_prime
@@ -67,9 +67,12 @@ def update_weights(net, phi, delta_prime, eta):
 
 
 ###train###
+np.random.seed(seed=0)
 ids = defaultdict(lambda: len(ids))
 feat_label = []
 
+
+# 先にidsのkeyを用意しておいてあげないと動かない
 with open("titles-en-train.labeled", "r", encoding="utf-8") as train_file:
     for line in train_file:
         label, sentence = line.strip().split("\t")
@@ -86,7 +89,7 @@ with open("titles-en-train.labeled", "r", encoding="utf-8") as train_file:
 # net = init_net(len(ids), layer_num, node_num)
 net = init_network(len(ids), 2, 1)
 
-for _ in range(1):
+for _ in range(5):
     for phi_0, label in feat_label:
         phi = forward_nn(net, phi_0)
         delta_prime = backward_nn(net, phi, label)
