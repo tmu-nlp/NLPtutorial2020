@@ -1,6 +1,8 @@
 import numpy as np
 from collections import defaultdict
 from tqdm import tqdm
+from sklearn.metrics import classification_report, accuracy_score
+from typing import List
 # 学習1回、隠れ層1つ、隠れ層のノード2つ
 
 
@@ -95,6 +97,18 @@ class NeuralNet:
             w += lamb * np.outer(delta_d[i+1], phi[i])
             b += lamb * delta_d[i+1]
 
+def check_score(gold_file: str, pred: List[int], detail: bool=False):
+   gold = []
+   with open(gold_file, mode='r', encoding='utf-8') as f:
+      for line in f:
+         label = int(line.split("\t")[0])
+         gold.append(label)
+   gold = np.array(gold)
+   pred = np.array(pred)
+   if detail:
+      print(classification_report(gold, pred))
+   print(f"accuracy: {accuracy_score(gold, pred)}")
+
 if __name__ == "__main__":
     input_path = "../../data/titles-en-train.labeled"
     test_path = "../../data/titles-en-test.word"
@@ -110,7 +124,5 @@ if __name__ == "__main__":
     ans = []
     for sentence in open(test_path):
         pred = net.test(sentence)
-        ans.append(str(pred))
-    with open(output_path, mode="w") as fw:
-        fw.write("\n".join(ans))
-    print("Finished!")
+        ans.append(pred)
+    check_score("../../data/titles-en-test.labeled", ans, True)
