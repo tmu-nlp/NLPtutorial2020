@@ -13,6 +13,9 @@ class Timer(object):
     secs: float
     msecs: float
 
+    def __init__(self, verbose=True):
+        self.verbose = verbose
+
     def __enter__(self) -> Type["Timer"]:
         self.start = time.time()
         return self
@@ -21,4 +24,5 @@ class Timer(object):
         self.end = time.time()
         self.secs = self.end - self.start
         self.msecs = self.secs * 1000
-        message(f"elapsed time = {self.msecs:f} [msec]", type="success")
+        if self.verbose:
+            message(f"elapsed time = {self.msecs:f} [msec]", type="success")
