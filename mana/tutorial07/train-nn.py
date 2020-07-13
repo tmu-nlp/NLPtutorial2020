@@ -2,6 +2,9 @@ from collections import defaultdict
 import numpy as np
 import pickle
 
+# debug大変だった
+# ndarrayを指定する
+# 時々Transposeの必要あり
 
 def create_features(sentence, ids):
     phi = np.zeros(len(ids))
@@ -38,11 +41,12 @@ def init_network(feature_size, node, layer):
 
 
 def forward_nn(net, phi_0):
-    phi = [0 for _ in range(len(net) + 1)]   # phiはリスト
+    phi = [0 for _ in range(len(net) + 1)]   # phiはリスト, phi_0はnp.zeros
     phi[0] = phi_0
     for i in range(len(net)):
         w, b = net[i]
-        phi[i + 1] = np.tanh(np.dot(w, phi[i]) + b).T # リストに入れるのでTransposeする
+        phi[i + 1] = np.tanh(np.dot(w, phi[i]) + b).T 
+    # Transposeしない --> ValueError: shapes (1,2) and (1,2) not aligned: 2 (dim 1) != 1 (dim 0)
     # print(phi)
     return phi
 
@@ -86,9 +90,8 @@ with open("titles-en-train.labeled", "r", encoding="utf-8") as train_file:
         phi = create_features(sentence, ids)
         feat_label.append((phi, label))
 
-# net = init_net(len(ids), layer_num, node_num)
 net = init_network(len(ids), 2, 1)
-
+#print(feat_label)
 for _ in range(5):
     for phi_0, label in feat_label:
         phi = forward_nn(net, phi_0)
