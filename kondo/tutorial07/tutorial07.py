@@ -1,5 +1,7 @@
 import numpy as np
+from tqdm import tqdm
 from collections import defaultdict
+from sklearn.metrics import accuracy_score
 
 class NeuralNetwork():
     def __init__(self, layer=1, node=2):
@@ -77,18 +79,20 @@ class NeuralNetwork():
 
     def fit(self, data, lr=0.1, iter=10):
         self.init_net(data)
-        for i in range(iter):
+        for i in tqdm(range(iter)):
             for (phi0, y) in self.feat_lab:
                 phi = self.forward_nn(phi0)
                 delta_prime = self.backward_nn(phi, y)
                 self.update_weights(phi, delta_prime, lr)
 
-        with open("weight_file", "w", encoding="utf-8") as wf, \
-                open("id_file", "w", encoding="utf-8") as idf:
-            for i, x in enumerate(self.net):
-                wf.write(f"{i+1}\n{x}\n")
-            for key, value in self.ids.items():
-                idf.write(f"{value}\t{key}\n")
+            with open("weight_file", "w", encoding="utf-8") as wf, \
+                    open("id_file", "w", encoding="utf-8") as idf:
+                for i, x in enumerate(self.net):
+                    wf.write(f"{i+1}\n{x}\n")
+                for key, value in self.ids.items():
+                    idf.write(f"{value}\t{key}\n")
+
+            check_score("../../data/titles-en-test.labeled", self.predict("../../data/titles-en-test.word", f"my_answer_ep{i:02}"))
 
     #推論
 
@@ -102,6 +106,7 @@ class NeuralNetwork():
         return phi
 
     def predict(self, data, ans):
+        my_ans = []
         with open(data, encoding="utf-8") as f,\
                 open(ans, "w", encoding="utf-8") as of:
             for line in f:
@@ -112,14 +117,24 @@ class NeuralNetwork():
                 else:
                     y = -1
                 of.write(f"{y}\n")
+                my_ans.append(y)
+        return my_ans
 
-
+def check_score(ans_file, my_ans):
+    ans = []
+    with open(ans_file, encoding="utf-8") as f:
+        for line in f:
+            label=int(line.split("\t")[0])
+            ans.append(label)
+    ans = np.array(ans)
+    my_ans = np.array(my_ans)
+    print(f"accuracy: {accuracy_score(ans, my_ans)}")
 
 if __name__ == "__main__":
     #training_file = "../../test/03-train-input.txt"
     training_file = "../../data/titles-en-train.labeled"
-    nn = NeuralNetwork(layer=2, node=3)
-    nn.fit(training_file, lr = 0.01 ,iter=1)
+    nn = NeuralNetwork(layer=1, node=2)
+    nn.fit(training_file, lr = 0.001 ,iter=10)
     test_file = "../../data/titles-en-test.word"
     ans_file = "my_answer"
     nn.predict(test_file, ans_file)
@@ -158,4 +173,29 @@ Accuracy = Accuracy = 92.171449%
 ../../script/grade-prediction.py ../../data/titles-en-test.labeled my_answer
 layer: 2, node: 3, 学習率: 0.01, イテレーション: 1, シード: 7
 Accuracy = 92.206872%
+"""
+
+"""
+layer: 1, node: 2, 学習率: 0.001, イテレーション: 10, シード: 7
+  0%|                                                                                                                                | 0/10 [00:00<?, ?it/s]
+  accuracy: 0.889833510449876
+ 10%|████████████                                                                                                            | 1/10 [00:44<06:42, 44.67s/it]
+ accuracy: 0.9025859015232023
+ 20%|████████████████████████                                                                                                | 2/10 [01:28<05:55, 44.46s/it]
+ accuracy: 0.9139213602550478
+ 30%|████████████████████████████████████                                                                                    | 3/10 [02:12<05:09, 44.23s/it]
+ accuracy: 0.9210060219624513
+ 40%|████████████████████████████████████████████████                                                                        | 4/10 [02:57<04:27, 44.60s/it]
+ accuracy: 0.9256110520722636
+ 50%|████████████████████████████████████████████████████████████                                                            | 5/10 [03:43<03:44, 44.95s/it]
+ accuracy: 0.9284449167552249
+ 60%|████████████████████████████████████████████████████████████████████████                                                | 6/10 [04:27<02:58, 44.63s/it]
+ accuracy: 0.9305703152674459
+ 70%|████████████████████████████████████████████████████████████████████████████████████                                    | 7/10 [05:15<02:16, 45.65s/it]
+ accuracy: 0.932695713779667
+ 80%|████████████████████████████████████████████████████████████████████████████████████████████████                        | 8/10 [05:59<01:30, 45.10s/it]
+ accuracy: 0.9337584130357776
+ 90%|████████████████████████████████████████████████████████████████████████████████████████████████████████████            | 9/10 [06:42<00:44, 44.60s/it]
+ accuracy: 0.9337584130357776
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 10/10 [07:26<00:00, 44.64s/it]
 """
