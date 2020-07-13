@@ -18,7 +18,7 @@ def init_network(feature_size, node, layer):
     net = []
 
     # 1つ目の隠れ層
-    w0 = 2 * np.random.rand(node, feature_size) - 0.5  # 重みは-1.0以上1.0未満で初期化
+    w0 = 2 * np.random.rand(node, feature_size) - 0.5  # 重みは-0.5以上0.5未満で初期化
     b0 = np.random.rand(1, node)
     net.append((w0, b0))
 
