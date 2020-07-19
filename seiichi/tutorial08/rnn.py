@@ -153,9 +153,10 @@ if __name__ == "__main__":
     le.fit(list(itertools.chain.from_iterable(train_y)))
     le = dict(zip(le.classes_, le.transform(le.classes_)))
     train_y, test_y = zero_padding(get_le(le, train_y)), zero_padding(get_le(le, test_y))
-    model = RNNLM(vocab_size=len(set(itertools.chain.from_iterable(train_X)))+1, wordvec_size=100, hidden_size=100)
-    optimizer = SGD(lr=0.01)
-    train_model(model, optimizer, train_X, train_y, max_epoch=30)
+    batch_size = 32
+    model = RNNLM(vocab_size=len(set(itertools.chain.from_iterable(train_X)))+1, wordvec_size=300, hidden_size=600)
+    optimizer = SGD(lr=0.001)
+    train_model(model, optimizer, train_X, train_y, max_epoch=30, batch_size=batch_size)
     # prediction
     # pred_y = model.predict(test_X[:32])
     # pred_y = pred_y.reshape(pred_y.shape[0]*pred_y.shape[1], -1)
@@ -164,7 +165,7 @@ if __name__ == "__main__":
     # pred_y = softmax(pred_y).argmax(axis=1)
     # print(test_y)
     # print(pred_y)
-    pred_y = batch_pred(test_X)
+    pred_y = batch_pred(test_X, batch_size=batch_size)
     test_y = test_y.reshape(test_y.shape[0]*test_y.shape[1])[:len(pred_y)]
     print(pred_y)
     print(test_y)
