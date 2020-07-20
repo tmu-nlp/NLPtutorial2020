@@ -1,5 +1,5 @@
 import numpy as np
-from tr import create_one_hot, forward_rnn
+from train_rnn import create_one_hot, forward_rnn
 import dill
 
 if __name__ == '__main__':
