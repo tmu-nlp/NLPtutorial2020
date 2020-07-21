@@ -37,18 +37,11 @@ class rnn():
         delta_b_o = np.zeros(len(self.tag_ids))
         delta_r_prime = np.zeros(self.node)
         for t in range(len(sent)-1, -1, -1):
-            #print(sent)
-            #print(t)
-            #print(p)
             word, tag = sent[t]
             p_prime = create_one_hot(self.tag_ids[tag], len(self.tag_ids))
             x = create_one_hot(self.word_ids[word], len(self.word_ids))
             
             delta_o_prime = p_prime - p[t]
-            #print(h[t])
-            #print(delta_o_prime)
-            #print(np.outer(h[t], delta_o_prime).T)
-            #print(delta_w_o_h)
             delta_w_o_h += np.outer(h[t], delta_o_prime).T
             delta_b_o += delta_o_prime
             delta_r = np.dot(delta_r_prime, w_r_h) + np.dot(delta_o_prime, w_o_h)
@@ -62,9 +55,7 @@ class rnn():
     def update_weights(self, delta, lr):
         w_r_x, w_r_h, w_o_h, b_r, b_o = self.net
         delta_w_r_x, delta_w_r_h, delta_w_o_h, delta_b_r, delta_b_o = delta
-        #for x, x_delta in zip(self.net, delta):
-        #    calc(x, x_delta, lr)
-        #print(w_r_x)
+
         w_r_x += lr*delta_w_r_x
         w_r_h += lr*delta_w_r_h
         b_r += lr*delta_b_r
@@ -86,14 +77,10 @@ class rnn():
                 h.append(np.tanh(np.dot(w_r_x, x) + np.dot(w_r_h, h[t-1]) + b_r))
             else:
                 h.append(np.tanh(np.dot(w_r_x, x) + b_r))
-                #print(np.tanh(np.dot(w_r_x, x) + b_r))
-                #print(b_r)
-                #print(x)
-            
-            #print(w_o_h)
+
             p.append(np.tanh(np.dot(w_o_h, h[t]) + b_o))
             y.append(find_best(p[t]))
-            #print(h)
+
         return h, p, y
 
 
@@ -135,15 +122,11 @@ class rnn():
             if t > 0:
                 h.append(np.tanh(np.dot(w_r_x, x) + np.dot(w_r_h, h[t-1]) + b_r))
             else:
-                #print(np.tanh(np.dot(w_r_x, x) + b_r))
-                #print(b_r)
-                #print(x)
                 h.append(np.tanh(np.dot(w_r_x, x) + b_r))
-            
-            #print(w_o_h)
+
             p.append(np.tanh(np.dot(w_o_h, h[t]) + b_o))
             y.append(find_best(p[t]))
-            #print(h)
+
         return h, p, y
 
     def test_rnn(self, test_file, ans_file):
@@ -155,14 +138,13 @@ class rnn():
         for line in testFile:
             pos = []
             line = line.strip().split()
-            #phi = self.create_features_test(line)
+
             h, p, y = self.forward_rnn_test(line)
             for elem in y:
                 for key, value in self.tag_ids.items():
                     if elem == value:
                         pos.append(key)
-                        #print(key)
-            #print(" ".join(pos))
+
             ans.write(" ".join(pos) + "\n")
 
   
@@ -217,9 +199,7 @@ VBN --> NNS     56
 -RRB- --> RB    46
 -LRB- --> RB    40
 RB --> NNS      36
-"""
 
-"""
 For a reference, HMM model
 
 Accuracy: 90.82% (4144/4563)
