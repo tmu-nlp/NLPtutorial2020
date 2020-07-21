@@ -3,7 +3,7 @@ from collections import defaultdict
 from tqdm import tqdm
 
 class rnn():
-    def __init__(self, node = 10):
+    def __init__(self, node = 64):
         self.feat_lab = []
         self.net = []
         self.word_ids = defaultdict(lambda: len(self.word_ids))
@@ -15,14 +15,14 @@ class rnn():
         # np.random.rand(n, m): -0.5以上, 0.5未満のｍ要素のリストｘnのリスト
     
         # 入力に対する重み
-        w_r_x = np.random.rand(self.node, len(self.word_ids)) / 5 - 0.1
+        w_r_x = (np.random.rand(self.node, len(self.word_ids)) - 0.5) / 5
         # 次の時刻に伝播する重み
-        w_r_h = np.random.rand(self.node, self.node) / 5 - 0.1
+        w_r_h = (np.random.rand(self.node, self.node) - 0.5) / 5
         # 出力に対する重み
-        w_o_h = np.random.rand(len(self.tag_ids), self.node) / 5 - 0.1
+        w_o_h = (np.random.rand(len(self.tag_ids), self.node) - 0.5) / 5
 
-        b_r = np.random.rand(self.node) / 5 - 0.1
-        b_o = np.random.rand(len(self.tag_ids)) / 5 - 0.1
+        b_r = (np.random.rand(self.node) - 0.5) / 5
+        b_o = (np.random.rand(len(self.tag_ids)) - 0.5) / 5
 
         self.net = [w_r_x, w_r_h, w_o_h, b_r, b_o]
         #print(self.net)
@@ -166,39 +166,44 @@ rnn_model = rnn()
 #rnn_model.test_rnn("/work/test/05-test-input.txt")
 
 
-rnn_model.train_rnn("/work/data/wiki-en-train.norm_pos", 20)
+rnn_model.train_rnn("/work/data/wiki-en-train.norm_pos", 5)
 rnn_model.test_rnn("/work/data/wiki-en-test.norm", "my_answer.txt")
 
 """
-iter: 50, node: 10, lr: 0.01
-Accuracy: 71.60% (3267/4563)
+iter: 5, node: 64, lr: 0.01
+
+- First try - 
+
+Accuracy: 84.40% (3851/4563)
 
 Most common mistakes:
-VBN --> RB      116
-VB --> RB       89
-VBP --> RB      79
-NNS --> NN      65
-JJ --> NN       64
--RRB- --> RB    47
--LRB- --> RB    46
-PRP --> RB      43
-MD --> RB       43
-VBG --> RB      43
+JJ --> NN       117
+NNS --> NN      94
+NNP --> NN      73
+RB --> NN       51
+VBN --> NN      44
+VBG --> NN      34
+VBP --> NN      34
+VB --> NN       24
+CD --> NN       23
+VBZ --> NN      20
 
-iter: 20, node: 10, lr: 0.01
-Accuracy: 69.87% (3188/4563)
+- second try -
+
+Accuracy: 84.42% (3852/4563)
 
 Most common mistakes:
-NN --> NNS      122
-VBN --> RB      85
-VB --> RB       80
-JJ --> NNS      76
-NNP --> NNS     62
-VBP --> RB      57
-VBN --> NNS     56
--RRB- --> RB    46
--LRB- --> RB    40
-RB --> NNS      36
+JJ --> NN       116
+NNS --> NN      91
+NNP --> NN      73
+RB --> NN       57
+VBN --> NN      47
+VBP --> NN      34
+VBG --> NN      30
+CD --> NN       28
+VB --> NN       24
+IN --> WDT      17
+
 
 For a reference, HMM model
 
