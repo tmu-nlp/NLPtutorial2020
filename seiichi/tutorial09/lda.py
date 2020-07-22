@@ -1,26 +1,11 @@
 import sys, os
 import numpy as np
+from tqdm import tqdm
 from collections import defaultdict
 from scipy.special import digamma
-# from numba import jitclass, f8, i8, b1, u1
 
-# spec = [
-#     ("documents", u1[:,:]),
-#     ("num_topic", i8),
-#     ("num_docs", i8),
-#     ("num_words", i8),
-#     ("total_words", i8),
-#     ("alpha", f8[:]),
-#     ("beta", f8),
-#     ("Z", i8[:,:]),
-#     ("n_d_k", i8[:,:]),
-#     ("n_k_w", i8[:,:]),
-#     ("n_k", i8[:]),
-# ]
-
-# @jitclass(spec)
 class LDA(object):
-    def __init__(self, documents, num_words=None, num_topic=10, alpha=0.1, beta=0.1):
+    def __init__(self, documents, num_words=None, num_topic=10, alpha=0.01, beta=0.02):
         self.documents = documents
         self.num_topic = num_topic
         self.num_docs = len(documents)
@@ -35,6 +20,7 @@ class LDA(object):
         self.n_d_k = np.zeros(shape=(self.num_docs, self.num_topic), dtype=int) # count of topic k in document d
         self.n_k_w = np.zeros(shape=(self.num_topic, self.num_words), dtype=int) # count of word w in topic k
         self.n_k = np.zeros(shape=(self.num_topic, ), dtype=int) # count of topic k
+        self.init()
         return 
 
     def _cnt_words(self, documents):
@@ -65,7 +51,7 @@ class LDA(object):
         return probs
 
     def sampling(self):
-        for i in range(self.num_docs):
+        for i in tqdm(range(self.num_docs), postfix="sampling"):
             for j in range(len(self.documents[i])):
                 word_id = self.documents[i][j]
                 topic_id = self.Z[i][j]
@@ -74,6 +60,8 @@ class LDA(object):
                 self.n_k_w[topic_id, word_id] -= 1
                 self.n_k[topic_id] -= 1
                 probs = self.get_topic_prob_dist(i, word_id)
+                if any(np.isnan(probs)):
+                    raise Exception("probs contain nan")
                 new_topic_id = np.random.multinomial(1, probs).argmax()
                 # update statistics
                 self.Z[i][j] = new_topic_id
@@ -81,29 +69,47 @@ class LDA(object):
                 self.n_k_w[new_topic_id, word_id] += 1
                 self.n_k[new_topic_id] += 1
         return self
-        
+    
+    def calc_sample_log_likelihood(self, doc_id):
+        logL = 0
+        for j in range(len(self.documents[doc_id])):
+            tmp = 0
+            for k in range(self.num_topic):
+                tmp += self.get_prob(doc_id, k, self.documents[doc_id][j])
+            logL += np.log(tmp)
+        return logL
+
     def calc_log_likelihood(self):
         logL = 0
         for i in range(self.num_docs):
-            for j in range(self.num_words):
+            for j in range(len(self.documents[i])):
+                tmp = 0
                 for k in range(self.num_topic):
-                    logL += self.get_prob(i, k, j)
-        return np.log(logL)
+                    tmp += self.get_prob(i, k, self.documents[i][j])
+                logL += np.log(tmp)
+        return logL
     
     def calc_perplexity(self):
         return np.exp(-self.calc_log_likelihood() / self.total_words)
+    
+    def calc_sample_perplexity(self):
+        # sample one document randomly
+        doc_id = np.random.choice(range(self.num_docs), 1)[0]
+        total_words = len(self.documents[doc_id])
+        return np.exp(-self.calc_sample_log_likelihood(doc_id) / total_words)
+
     
     def calc_new_alpha_k(self, k):
         denom, numer= 0, 0
         for i in range(self.num_docs):
             denom += digamma(sum(self.n_d_k[i]) + sum(self.alpha)) - digamma(sum(self.alpha))
         for i in range(self.num_docs):
-            numer += (digamma(self.n_d_k[i, k]) - digamma(self.alpha[k])) * self.alpha[k]
-        return numer / denom
+            numer += (digamma(self.n_d_k[i, k] + self.alpha[k]) - digamma(self.alpha[k]))
+        return numer / denom * self.alpha[k]
 
     # fixed-point iteration; ref: https://www.coronasha.co.jp/np/isbn/9784339027587/
     def update_alpha(self):
-        for k in range(self.num_topic):
+        for k in tqdm(range(self.num_topic), postfix="alpha_update"):
             self.alpha[k] = self.calc_new_alpha_k(k)
         return self
 
@@ -132,11 +138,7 @@ def load_data(path):
 if __name__ == "__main__":
     documents, word2id = load_data("../../data/wiki-en-documents.word")
     lda = LDA(documents=documents,num_words=len(word2id.items()),num_topic=10)
-    lda.init()
-    print(lda.total_words)
     for i in range(10):
         lda.sampling().update_alpha()
-        # p = lda.calc_log_likelihood()
-        # print("lod_likelihood:", p)
-        ppl = lda.calc_perplexity()
+        ppl = lda.calc_sample_perplexity()
         print("perplexity:", ppl)
