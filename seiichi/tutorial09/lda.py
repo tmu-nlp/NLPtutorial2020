@@ -116,6 +116,15 @@ class LDA(object):
         topic_dist = self.get_topic_prob_dist(doc_id, word_id)
         topic = topic_dist.argmax()
         return topic
+    
+    def get_high_freq_words_in_topic(self, topic_id, id2word, num_words=20):
+        tmp = self.n_k_w[topic_id].copy()
+        indices = self.n_k_w[topic_id].argsort()[::-1][:num_words]
+        ranking = []
+        for index in indices:
+            ranking.append((tmp[index], id2word[index]))
+        return ranking
+
 
 def load_data(path):
     vocab = set()
@@ -138,12 +147,21 @@ def load_data(path):
         data_new.append(doc_new)
     return data_new, word2id
 
-def look_topic(model, documents, id2word, path="./result/topic.txt"):
+def look_topic(model, documents, id2word, path="./result/sample.txt"):
     with open(path, "w") as f:
         for doc_id, doc in enumerate(documents):
             f.write("document: {}\n".format(doc_id))
             for word in doc:
                 f.write("{}: {}, ".format(id2word.get(word), model.get_topic(doc_id, word)))
+            f.write("\n")
+
+def ranking(model, id2word, path="./result/topic.txt"):
+    with open(path, "w") as f:
+        for i in range(model.num_topic):
+            ranking = model.get_high_freq_words_in_topic(i, id2word)
+            f.write("topic #{}\n".format(i))
+            for cnt, word in ranking:
+                f.write("{}: {}, ".format(word, cnt))
             f.write("\n")
 
 if __name__ == "__main__":
@@ -155,6 +173,7 @@ if __name__ == "__main__":
         ppl = lda.calc_sample_perplexity()
         print("perplexity:", ppl)
     look_topic(lda, documents[:10], id2word)
+    ranking(lda, id2word)
 
 
 """iteration log
