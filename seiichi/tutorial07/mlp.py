@@ -87,7 +87,7 @@ def train_model(model, optimizer, X, y, batch_size=32, max_epoch=10):
             # from sklearn.metrics import accuracy_score
             # print(accuracy_score(batch_y, np.int32(sigmoid(pred_y)>=0)))
         avg_loss = total_loss / loss_count    
-        print("epoch {}, loss {:.3f}, ".format(epoch, avg_loss))
+        print("epoch {}, loss {:.3f}".format(epoch, avg_loss))
 
 def get_count(vectorizer, train_X):
     X = vectorizer.transform(list(map(lambda x: " ".join(x), train_X)))

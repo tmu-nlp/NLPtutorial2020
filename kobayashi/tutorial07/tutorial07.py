@@ -1,6 +1,6 @@
+#python tutorial07.py ../../data/titles-en-train.labeled result1.txt ../../data/titles-en-test.word result2.txt
 import sys
 import numpy as np
-
 from collections import defaultdict
 
 def count_features(ids, input_file):
@@ -18,10 +18,10 @@ class NeuralNetwork:
         self.onodes = 1
         self.lr = lr
 
-        self.w_ih = np.random.rand(self.hnodes, self.inodes)
-        self.w_ho = np.random.rand(self.onodes, self.hnodes)
-        self.b_ih = np.random.rand(self.hnodes)
-        self.b_ho = np.random.rand(self.onodes)
+        self.w_ih = np.random.rand(self.hnodes, self.inodes) -0.5
+        self.w_ho = np.random.rand(self.onodes, self.hnodes)-0.5
+        self.b_ih = np.random.rand(self.hnodes)-0.5
+        self.b_ho = np.random.rand(self.onodes)-0.5
 
         self.phi = [0,0,0]
         self.delta_ih = [0,0]
@@ -108,3 +108,6 @@ if __name__ == "__main__" :
     NN = NeuralNetwork(len(ids),0.01)
     NN.train(sys.argv[1],sys.argv[2])
     NN.test(sys.argv[3],sys.argv[4])
+    '''
+    Accuracy:89.373007%
+    '''
