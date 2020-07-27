@@ -1,0 +1,39 @@
+===== 0 =====
+['clan', 'province', 'government', 'castle', 'shogun', 'domain', 'shogunate',
+ 'war', 'ashikaga', 'army', 'battle', 'became', 'nobunaga', 'edo', 'hideyoshi',
+ 'bakufu', 'tokugawa', 'military', 'mitsuhide', 'power', 'however', 'post',
+ 'incident', 'new', 'samurai', 'shugo', 'order', 'lord', 'daimyo', 'muromachi',
+ 'kamakura', 'forces', 'died', 'hosokawa', 'took', 'position', 'yoshitsune',
+ 'takauji', 'former', 'oda', 'appointed', 'members', 'saigo']
+===== 1 =====
+['city', 'shrine', 'prefecture', 'street', 'cultural', 'river', 'ward', 'used',
+ 'area', 'japanese', 'national', 'shrines', 'road', 'designated', 'side',
+ 'west', 'important', 'north', 'located', 'maizuru', 'south', 'properties',
+ 'festival', 'property', 'district', 'shinto', 'east', 'mountain', 'noh',
+ 'town', 'bridge', 'constructed', 'style', 'fushimi', 'forest', 'small',
+ 'swords']
+===== 2 =====
+['station', 'line', 'kyoto', 'school', 'university', 'railway', 'trains',
+ 'train', 'section', 'express', 'jr', 'established', '1', 'department',
+ 'electric', 'operation', 'keihan', 'osaka', 'education', 'faculty', 'limited',
+ 'company', 'april', 'system', 'research', 'main', 'doshisha', 'operated',
+ 'local', 'cars', 'fukuchiyama', 'stations', 'course', 'march', 'opened',
+ 'service', 'high', 'center', 'series', 'science', 'rapid', 'students',
+ 'schools', 'campus', 'normal', 'bus', 'year', 'higher', 'km', 'hankyu',
+ 'october', 'track', 'started', 'subway', 'special', 'number', 'graduate',
+ 'card', 'studies', 'co', 'two', 'division', 'municipal', 'kansai', 'college',
+ 'ticket', 'institute']
+===== 3 =====
+['also', 'one', 'called', 'people', 'said', 'buddhism', 'time', 'made',
+ 'written', 'book', 'tea', 'many', 'theory', 'god', 'day', 'based', 'like',
+ 'considered', 'various', 'means', 'around', 'bosatsu', 'part', 'according',
+ 'sutra', 'although']
+===== 4 =====
+['emperor', 'family', 'imperial', 'fujiwara', 'prince', 'court', 'son', 'name',
+ 'minamoto', 'palace', 'tale', 'daughter', 'rank', 'first', 'genji', 'retired',
+ 'later', 'throne', 'taira', 'old', 'mother', 'kannon', 'families', 'regent',
+ 'years', 'second', 'death', 'empress', 'father', 'house']
+===== 5 =====
+['temple', 'period', 'hall', 'sect', 'statue', 'buddhist', 'japan', 'priest',
+ 'temples', 'built', 'head', 'wooden', 'gate', 'image', 'art', 'known', 'china',
+ 'buddha', 'group', 'zen']

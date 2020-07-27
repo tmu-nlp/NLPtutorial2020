@@ -1,0 +1,36 @@
+===== 0 =====
+['temple', 'period', 'shrine', 'called', 'japanese', 'sect', 'japan',
+ 'cultural', 'one', 'buddhist', 'important', 'statue', 'buddhism', 'style',
+ 'shrines', 'written', 'domain', 'people', 'heian', 'buddha', 'chinese', 'tale',
+ 'sutra', 'three', 'temples', 'god', 'wooden', 'among', 'world', 'properties',
+ 'china', 'ancient', 'shinto', 'genji', 'various', 'two', 'lord', 'priest',
+ 'daimyo', 'based', 'considered', 'book', 'work', 'kami', 'noh', 'five',
+ 'means']
+===== 1 =====
+['city', 'prefecture', 'street', 'ward', 'river', 'hall', 'main', 'used',
+ 'area', 'national', 'built', 'gate', 'located', 'around', 'tea', 'many',
+ 'year', 'including', 'building', 'side', 'mountain', 'mt', 'north', 'known',
+ 'large', 'town', 'museum', 'east', 'color', 'place', 'along', 'site', 'day',
+ 'front', 'materials']
+===== 2 =====
+['emperor', 'family', 'imperial', 'clan', 'court', 'became', 'fujiwara',
+ 'province', 'government', 'prince', 'son', 'also', 'shogun', 'name',
+ 'shogunate', 'rank', 'time', 'ashikaga', 'however', 'power', 'later', 'army',
+ 'battle', 'died', 'position', 'war', 'nobunaga', 'castle', 'kamakura', 'new',
+ 'minamoto', 'death', 'palace', 'hideyoshi', 'tokugawa', 'first', 'order',
+ 'bakufu', 'daughter', 'edo', 'took', 'incident', 'said', 'years', 'taira',
+ 'chief', 'military', 'mitsuhide', 'second', 'father', 'minister', 'head',
+ 'families', 'would', 'retired', 'made', 'brother', 'house', 'group',
+ 'political', 'appointed', 'samurai', 'southern', 'post', 'shugo', 'given',
+ 'old', 'forces', 'hojo', 'hosokawa', 'throne', 'left', 'wife', 'muromachi',
+ 'even', 'yoshitsune', 'takauji']
+===== 3 =====
+['station', 'line', 'kyoto', 'school', 'university', 'railway', 'trains',
+ 'train', 'section', 'express', 'established', '1', 'jr', 'department',
+ 'electric', 'keihan', 'operation', 'system', 'osaka', 'education', 'local',
+ 'faculty', 'limited', 'april', 'research', 'company', 'maizuru', 'doshisha',
+ 'operated', 'cars', 'series', 'fukuchiyama', 'stations', 'high', 'march',
+ 'course', 'service', 'west', 'schools', 'route', 'road', 'bus', 'opened',
+ 'center', 'science', 'higher', 'students', 'rapid', 'campus', 'normal',
+ 'municipal', 'special', 'km', 'started', 'october', 'hankyu', 'division',
+ 'track', 'subway', 'prefectural', 'co', 'number']

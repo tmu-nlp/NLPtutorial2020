@@ -1,0 +1,34 @@
+===== 0 =====
+['station', 'kyoto', 'line', 'city', 'railway', 'trains', 'prefecture', 'train',
+ 'section', 'street', 'area', '1', 'express', 'ward', 'osaka', 'main', 'west',
+ 'river', 'jr', 'local', 'used', 'electric', 'keihan', 'operation', 'limited',
+ 'april', 'company', 'maizuru', 'located', 'service', 'series', 'bus',
+ 'operated', 'cars', 'march', 'opened', 'fukuchiyama', 'stations', 'road',
+ 'route', 'special', 'along', 'office', 'construction', 'rapid', 'east',
+ 'started', 'south', 'north', 'october', 'municipal', 'type', 'km', 'lines',
+ 'number', 'hankyu', 'nara']
+===== 1 =====
+['temple', 'school', 'university', 'shrine', 'period', 'called', 'japanese',
+ 'japan', 'one', 'cultural', 'established', 'hall', 'sect', 'national',
+ 'buddhist', 'department', 'important', 'statue', 'style', 'people',
+ 'education', 'faculty', 'high', 'buddhism', 'many', 'research', 'schools',
+ 'said', 'doshisha', 'center', 'made', 'course', 'written', 'shrines', 'two',
+ 'tale', 'old', 'built', 'system', 'ancient', 'chinese', 'buddha', 'higher',
+ 'three', 'tea', 'sutra', 'year', 'science', 'world', 'gate', 'known', 'china',
+ 'tokyo', 'god', 'history', 'building', 'normal', 'campus', 'genji', 'based',
+ 'wooden', 'property', 'students', 'heian', 'properties', 'law', 'temples',
+ 'considered', 'training', 'shinto', 'among', 'times', 'art', 'image', 'around',
+ 'designated', 'library', 'work', 'studies', 'including', 'means', 'place',
+ 'literature']
+===== 2 =====
+['emperor', 'family', 'imperial', 'clan', 'court', 'province', 'became',
+ 'fujiwara', 'also', 'government', 'prince', 'son', 'castle', 'name', 'shogun',
+ 'time', 'shogunate', 'rank', 'domain', 'however', 'ashikaga', 'later',
+ 'palace', 'power', 'war', 'edo', 'army', 'position', 'battle', 'kamakura',
+ 'died', 'nobunaga', 'first', 'chief', 'hideyoshi', 'tokugawa', 'order',
+ 'minamoto', 'new', 'death', 'bakufu', 'head', 'daughter', 'military', 'took',
+ 'minister', 'would', 'incident', 'taira', 'mitsuhide', 'years', 'father',
+ 'second', 'samurai', 'families', 'retired', 'house', 'southern', 'given',
+ 'brother', 'post', 'muromachi', 'left', 'political', 'appointed', 'title',
+ 'since', 'even', 'shugo', 'lord', 'daimyo', 'northern', 'forces', 'hojo',
+ 'hosokawa', 'although', 'according', 'throne', 'wife', 'came']
