@@ -28,8 +28,7 @@ def sampleone(probs):
         remaining -= probs[i]
         if remaining <= 0:
             return i
-    message("sampleone error", type="error")
-    exit(1)
+    raise Exception("remaining =", remaining)
 
 
 def add_counts(xcounts, ycounts, word, topic, docid, amount):
