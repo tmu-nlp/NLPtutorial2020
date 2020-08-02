@@ -2,10 +2,11 @@ from collections import defaultdict
 import random
 import sys
 import math
+from tqdm import tqdm
 
 random.seed(1)
 
-NUM_TOPICS = 2
+NUM_TOPICS = 8
 xcorpus = []
 ycorpus = []
 xcounts = defaultdict(int)
@@ -74,7 +75,7 @@ def sampling(iter=100, alpha=1e-6, beta=1e-6):
     global y_topics
     N_x = len(x_words)
     N_y = len(y_topics)
-    for _ in range(iter):
+    for _ in tqdm(range(iter)):
         ll = 0
         for i in range(len(xcorpus)):
             for j in range(len(xcorpus[i])):
@@ -96,7 +97,7 @@ if __name__ == "__main__":
     #path = "../../test/07-train.txt"
     path = "../../data/wiki-en-documents.word"
     initialize(path)
-    sampling(1, alpha=1e-2, beta=1e-2)
+    sampling(100, alpha=1e-2, beta=1e-2)
     
     with open("my_ans", "w", encoding="utf-8") as f:
         for i in range(len(xcorpus)):
