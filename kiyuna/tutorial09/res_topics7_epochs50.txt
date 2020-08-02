@@ -1,0 +1,40 @@
+===== 0 =====
+['school', 'university', 'established', 'department', 'education', 'faculty',
+ 'system', 'high', 'research', 'schools', 'doshisha', 'course', 'science',
+ 'higher', 'center', 'students', 'tokyo', 'campus', 'normal', 'law', 'junior',
+ 'studies', 'library', 'graduate', 'year', 'division', 'arts', 'college',
+ 'institute', 'april']
+===== 1 =====
+['station', 'line', 'railway', 'trains', 'train', 'section', 'express', 'jr',
+ 'electric', 'operation', 'keihan', 'limited', '1', 'local', 'company',
+ 'operated', 'cars', 'stations', 'main', 'series', 'osaka', 'service', 'rapid',
+ 'march', 'km', 'hankyu', 'track', 'subway', 'card', 'special', 'ticket']
+===== 2 =====
+['shrine', 'called', 'also', 'japanese', 'cultural', 'style', 'used', 'one',
+ 'people', 'japan', 'important', 'shrines', 'made', 'tea', 'god', 'many',
+ 'properties', 'shinto', 'chinese', 'ancient', 'considered', 'among', 'two',
+ 'world', 'noh', 'often', 'designated', 'means', 'times', 'long', 'like',
+ 'swords']
+===== 3 =====
+['clan', 'province', 'shogun', 'castle', 'domain', 'shogunate', 'ashikaga',
+ 'war', 'army', 'battle', 'nobunaga', 'edo', 'hideyoshi', 'tokugawa', 'bakufu',
+ 'military', 'mitsuhide', 'samurai', 'time', 'shugo', 'lord', 'daimyo',
+ 'muromachi', 'forces', 'new', 'incident', 'hosokawa', 'kamakura', 'takauji',
+ 'hojo', 'oda', 'members', 'others']
+===== 4 =====
+['temple', 'period', 'sect', 'hall', 'statue', 'buddhist', 'buddhism', 'priest',
+ 'buddha', 'sutra', 'head', 'built', 'gate', 'wooden', 'temples', 'heian',
+ 'image', 'known', 'yoshitsune', 'mt', 'bosatsu', 'kannon', 'zen', 'nara']
+===== 5 =====
+['kyoto', 'city', 'prefecture', 'street', 'area', 'ward', 'river', 'maizuru',
+ 'located', 'office', 'west', 'road', 'national', 'east', 'side', 'north',
+ 'town', 'district', 'south', 'along', 'around', 'part', 'bridge', 'bus',
+ 'areas', 'forest']
+===== 6 =====
+['emperor', 'imperial', 'court', 'fujiwara', 'prince', 'family', 'son',
+ 'became', 'rank', 'name', 'first', 'government', 'minamoto', 'however',
+ 'palace', 'later', 'daughter', 'taira', 'died', 'death', 'father', 'genji',
+ 'position', 'years', 'retired', 'minister', 'second', 'power', 'brother',
+ 'order', 'throne', 'written', 'according', 'book', 'wife', 'southern', 'said',
+ 'tale', 'mother', 'old', 'would', 'since', 'regent', 'official', 'saigo',
+ 'empress', 'post', 'political']

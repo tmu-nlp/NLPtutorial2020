@@ -1,0 +1,37 @@
+===== 0 =====
+['school', 'university', 'established', 'department', 'center', 'education',
+ 'faculty', 'high', 'research', 'schools', 'national', 'doshisha', 'course',
+ 'year', 'building', 'higher', 'science', 'tokyo', 'students', 'normal',
+ 'campus', 'law', 'old', 'training', 'studies', 'library', 'april', 'graduate',
+ 'division', 'renamed', 'arts']
+===== 1 =====
+['station', 'line', 'railway', 'trains', 'train', 'section', 'express', 'jr',
+ '1', 'electric', 'keihan', 'operation', 'limited', 'main', 'maizuru', 'osaka',
+ 'company', 'west', 'operated', 'bus', 'cars', 'fukuchiyama', 'local',
+ 'stations', 'route', 'series', 'service', 'rapid', 'march', 'km', 'municipal',
+ 'october', 'hankyu', 'road', 'track', 'subway', 'opened', 'special', 'card']
+===== 2 =====
+['emperor', 'family', 'imperial', 'clan', 'court', 'fujiwara', 'became',
+ 'prince', 'son', 'also', 'government', 'shogun', 'name', 'province',
+ 'shogunate', 'rank', 'time', 'ashikaga', 'later', 'battle', 'army', 'died',
+ 'position', 'however', 'nobunaga', 'kamakura', 'minamoto', 'first', 'said',
+ 'order', 'palace', 'power', 'daughter', 'hideyoshi', 'chief', 'incident',
+ 'death', 'taira', 'head', 'bakufu', 'father', 'minister', 'war', 'new',
+ 'second', 'families', 'years', 'muromachi', 'retired', 'brother', 'appointed',
+ 'house', 'tokugawa', 'would', 'left', 'mitsuhide', 'shugo', 'samurai',
+ 'political', 'took', 'group', 'given', 'forces', 'hosokawa', 'came', 'throne',
+ 'wife', 'yoshitsune', 'takauji', 'mother', 'southern', 'although']
+===== 3 =====
+['temple', 'shrine', 'period', 'called', 'sect', 'hall', 'one', 'important',
+ 'cultural', 'statue', 'style', 'japanese', 'buddhist', 'buddhism', 'written',
+ 'made', 'tale', 'buddha', 'tea', 'sutra', 'work', 'built', 'shrines', 'china',
+ 'god', 'wooden', 'property', 'genji', 'properties', 'priest', 'chinese',
+ 'shinto', 'known', 'three', 'temples', 'heian', 'considered', 'image', 'book',
+ 'gate', 'ancient', 'noh', 'two', 'collection', 'bosatsu', 'among', 'kannon',
+ 'designated']
+===== 4 =====
+['kyoto', 'city', 'street', 'castle', 'prefecture', 'domain', 'japan', 'ward',
+ 'river', 'area', 'used', 'system', 'around', 'many', 'edo', 'people', 'side',
+ 'along', 'located', 'office', 'north', 'meiji', 'former', 'due', 'land',
+ 'capital', 'fushimi', 'moved', 'east', 'region', 'district', 'part', 'lower',
+ 'south', 'since']
