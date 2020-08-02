@@ -4,7 +4,7 @@ import sys
 import math
 from tqdm import tqdm
 
-random.seed(1)
+random.seed(7)
 
 NUM_TOPICS = 8
 xcorpus = []
@@ -60,7 +60,7 @@ def addcounts(word, topic, docid, amount):
 
 def sampleone(probs):
     z = sum(probs)
-    remaining = random.random()*z
+    remaining = random.uniform(0, z)
     for i in range(len(probs)):
         remaining -= probs[i]
         if remaining <= 0:
@@ -68,9 +68,11 @@ def sampleone(probs):
     print("sampleone error")
     sys.exit()
 
-def sampling(iter=100, alpha=1e-6, beta=1e-6):
+def sampling(iter=10, alpha=1e-6, beta=1e-6):
     global xcorpus
     global ycorpus
+    global xcounts
+    global ycounts
     global x_words
     global y_topics
     N_x = len(x_words)
@@ -84,22 +86,38 @@ def sampling(iter=100, alpha=1e-6, beta=1e-6):
                 addcounts(x, y, i, -1)
                 probs = []
                 for k in range(NUM_TOPICS):
-                    p_xk = (xcounts[f"{x}|{k}"] + alpha)/(ycounts[f"{k}"] + alpha*N_x)
-                    p_ky = (ycounts[f"{k}|{y}"] + beta)/(ycounts[f"{y}"] + beta*N_y)
+                    p_xk = (xcounts[f"{x}|{k}"] + alpha)/(xcounts[f"{k}"] + alpha*N_x)
+                    p_ky = (ycounts[f"{k}|{i}"] + beta)/(ycounts[f"{i}"] + beta*N_y)
                     probs.append(p_xk*p_ky)
                 new_y = sampleone(probs)
                 ll += math.log(probs[new_y])
                 addcounts(x, new_y, i, 1)
                 ycorpus[i][j] = new_y
-        print(ll)
+        print(-1*ll)
 
 if __name__ == "__main__":
     #path = "../../test/07-train.txt"
     path = "../../data/wiki-en-documents.word"
     initialize(path)
     sampling(100, alpha=1e-2, beta=1e-2)
-    
+
+    topic_0 = defaultdict(int)
+    topic_1 = defaultdict(int)
+    topic_2 = defaultdict(int)
+    topic_3= defaultdict(int)
+    topic_4 = defaultdict(int)
+    topic_5 = defaultdict(int)
+    topic_6 = defaultdict(int)
+    topic_7 = defaultdict(int)
+
+    dic = {0: topic_0, 1: topic_1, 2: topic_2, 3: topic_3, 4: topic_4, 5: topic_5, 6: topic_6, 7: topic_7}
+    for i in range(len(xcorpus)):
+        for j in range(len(xcorpus[i])):
+            topic = dic[ycorpus[i][j]]
+            topic[f"{xcorpus[i][j]}"] += 1
+    topics = [topic_0, topic_1, topic_2, topic_3, topic_4, topic_5, topic_6, topic_7]
+
     with open("my_ans", "w", encoding="utf-8") as f:
-        for i in range(len(xcorpus)):
-            for j in range(len(xcorpus[i])):
-                f.write(f"{xcorpus[i][j]}_{ycorpus[i][j]}\n")
+        for idx, topic in enumerate(topics):
+            f.write(f"topic {idx}\n")
+            f.write(str(sorted(topic.items(), key=lambda x:x[1], reverse=True))+'\n\n')
